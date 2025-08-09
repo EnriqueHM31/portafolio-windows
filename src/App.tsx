@@ -1,33 +1,44 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import FONDO from '@/assets/fondo.webp'
+import { FaSearch, FaWindows } from 'react-icons/fa'
+
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <section className="w-full h-screen relative grid grid-rows-[1fr_auto]">
+        {/* Fondo */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${FONDO})` }}
+        />
+
+        {/* Contenido del "escritorio" */}
+        <div className="relative z-10 p-4 ">
+          {/* Aquí puedes poner iconos, widgets, etc. */}
+        </div>
+
+        {/* Barra de tareas */}
+        <div className="relative w-full z-10 bg-black/90 text-white flex items-center max-w-full mx-auto ">
+          {/* Botón de inicio */}
+          <div className='flex items-center gap-4'>
+            <button className=" size-12 flex items-center justify-center">
+              <FaWindows />
+            </button>
+            <label htmlFor="buscador-windows" className=" flex items-center gap-4 bg-primary" >
+              <FaSearch />
+              <input type="search" id="buscador-windows" className="" />
+            </label>
+          </div>
+
+          {/* Espacio en medio */}
+          <div className="flex-1"></div>
+
+          {/* Hora */}
+          <span>19:45</span>
+        </div>
+      </section>
+
     </>
   )
 }
