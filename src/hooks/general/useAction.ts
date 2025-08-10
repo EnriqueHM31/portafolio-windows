@@ -1,21 +1,32 @@
 import { useState, useCallback } from "react";
-export function useAction<T extends string[] | number[]>(action: (...args: T) => Promise<void>) {
+
+export function useAction<Args extends unknown[]>(
+    action: (...args: Args) => Promise<void>
+) {
     const [isPending, setIsPending] = useState(false);
-    const [isError, setIsError] = useState(false);
+    const [isError, setIsError] = useState({
+        error: false,
+        message: "",
+    });
 
-    console.log({ isPending, isError })
+    const handleAction = useCallback(
+        async (...args: Args) => {
+            setIsPending(true);
+            setIsError({ error: false, message: "" });
+            try {
+                await action(...args);
+            } catch (err) {
+                const message =
+                    err instanceof Error ? err.message : String(err);
+                setIsError({ error: true, message });
+            } finally {
+                setIsPending(false);
+            }
+        },
+        [action]
+    );
 
-    const handleAction = useCallback(async (...args: T) => {
-        setIsPending(true);
-        setIsError(false);
-        try {
-            await action(...args);
-        } catch {
-            setIsError(true);
-        } finally {
-            setIsPending(false);
-        }
-    }, [action]);
+    const resetError = () => setIsError({ error: false, message: "" });
 
-    return { isPending, isError, handleAction };
+    return { isPending, isError, handleAction, resetError };
 }
