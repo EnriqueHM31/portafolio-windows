@@ -2,4 +2,14 @@
 
 @theme {
     --color-primary: #fff;
+    --color-secondary: #000;
+}
+
+
+input[type="search"]::-webkit-search-cancel-button {
+    @apply appearance-none;
+}
+
+input[type="search"]::-webkit-search-decoration {
+    @apply appearance-none;
 }
