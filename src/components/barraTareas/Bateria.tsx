@@ -4,8 +4,14 @@ import { AnimatePresence } from "framer-motion";
 import Container from "../secciones/Container";
 import { useOpen } from "@/hooks/general/useOpen";
 import BateriaModal from "@/components/secciones/Bateria";
+import { type Rendimiento } from "@/types/barraTareas/Bateria";
 
-export default function Bateria() {
+interface BateriaProps {
+    rendimiento: Rendimiento[]
+    handleChangeRendimiento: (event: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+export default function Bateria({ rendimiento, handleChangeRendimiento }: BateriaProps) {
 
     const { isOpen, handleOpen, handleClose } = useOpen()
     return (
@@ -14,8 +20,8 @@ export default function Bateria() {
                 <AnimatePresence>
                     {
                         isOpen && (
-                            <Container className="w-100 -left-49 -top-57" onClose={handleClose}>
-                                <BateriaModal />
+                            <Container className="w-100 -left-49 -top-60" onClose={handleClose}>
+                                <BateriaModal rendimiento={rendimiento} handleChangeRendimiento={handleChangeRendimiento} />
                             </Container>
                         )
                     }

@@ -8,8 +8,14 @@ import AppTareas from "./AppTareas";
 import { useTiempo } from "@/hooks/barraTareas/UseTiempo";
 import Volumen from "./barraTareas/Volumen";
 import Bateria from "./barraTareas/Bateria";
+import { type Rendimiento } from "@/types/barraTareas/Bateria";
 
-export default function BarraTareas() {
+interface BarraTareasProps {
+    rendimiento: Rendimiento[]
+    handleChangeRendimiento: (event: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+export default function BarraTareas({ rendimiento, handleChangeRendimiento }: BarraTareasProps) {
 
     const { hora, fecha, fechaFinal } = useTiempo()
     return (
@@ -54,7 +60,7 @@ export default function BarraTareas() {
                     </span>
                 </Tooltip>
 
-                <Bateria />
+                <Bateria rendimiento={rendimiento} handleChangeRendimiento={handleChangeRendimiento} />
 
                 <Volumen />
 
