@@ -3,11 +3,11 @@ import Tooltip from "./general/ToolTip";
 import { VscSearch } from "react-icons/vsc";
 import { FaWifi } from "react-icons/fa";
 import { LiaComment } from "react-icons/lia";
-import { PiBatteryHighFill } from "react-icons/pi";
 import { APPS_PREDETERMINADAS } from "../constants/Aplicaciones";
 import AppTareas from "./AppTareas";
 import { useTiempo } from "@/hooks/barraTareas/UseTiempo";
 import Volumen from "./barraTareas/Volumen";
+import Bateria from "./barraTareas/Bateria";
 
 export default function BarraTareas() {
 
@@ -54,12 +54,7 @@ export default function BarraTareas() {
                     </span>
                 </Tooltip>
 
-                <Tooltip text="80 % Disponible" position="top">
-                    <span className='hover:bg-white/20 h-full flex items-center justify-center px-1 cursor-pointer'>
-                        <PiBatteryHighFill className='text-xl' />
-
-                    </span>
-                </Tooltip>
+                <Bateria />
 
                 <Volumen />
 
