@@ -4,10 +4,10 @@ import { VscSearch } from "react-icons/vsc";
 import { FaWifi } from "react-icons/fa";
 import { LiaComment } from "react-icons/lia";
 import { PiBatteryHighFill } from "react-icons/pi";
-import { IoVolumeHighSharp } from "react-icons/io5";
 import { APPS_PREDETERMINADAS } from "../constants/Aplicaciones";
 import AppTareas from "./AppTareas";
 import { useTiempo } from "@/hooks/barraTareas/UseTiempo";
+import Volumen from "./barraTareas/Volumen";
 
 export default function BarraTareas() {
 
@@ -61,11 +61,7 @@ export default function BarraTareas() {
                     </span>
                 </Tooltip>
 
-                <Tooltip text="Altavoces: 100%" position="top">
-                    <span className='hover:bg-white/20 h-full flex items-center justify-center px-1 cursor-pointer'>
-                        <IoVolumeHighSharp className=' text-xl ' />
-                    </span>
-                </Tooltip>
+                <Volumen />
 
                 <Tooltip text={fechaFinal} position="top">
                     <div className='flex flex-col hover:bg-white/20 h-full justify-center px-1 cursor-pointer'>
