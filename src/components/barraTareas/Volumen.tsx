@@ -19,7 +19,7 @@ export default function Volumen() {
                     <AnimatePresence>
                         {
                             isOpen && (
-                                <Container className="w-70 -left-40 -top-25" onClose={handleClose}>
+                                <Container className="w-70 -left-40 -top-24" onClose={handleClose}>
                                     <VolumenModal volumen={volumen} handleChangeVolumen={handleChangeVolumen} />
                                 </Container>
                             )
