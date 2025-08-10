@@ -1,22 +1,21 @@
-import { motion } from "framer-motion"
-import { useState } from "react"
 import { IoVolumeHighSharp } from "react-icons/io5"
-export default function Volumen() {
 
-    const [volumen, setVolumen] = useState(80)
+interface VolumenProps {
+    volumen: number
+    handleChangeVolumen: (event: React.ChangeEvent<HTMLInputElement>) => void
+}
 
-    const handleChangeVolumen = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setVolumen(Number(event.target.value))
-    }
+export default function Volumen({ volumen, handleChangeVolumen }: VolumenProps) {
+
     return (
-        <motion.section className="flex flex-col gap-3 p-3 rounded-xl bg-black backdrop-blur-3xl">
+        <div className="flex flex-col gap-2 p-3">
             <h2>Altavoces (Realtek(R) Audio)</h2>
 
-            <div>
-                <IoVolumeHighSharp className='text-xl' />
-                <input onChange={handleChangeVolumen} type="range" min="0" max="100" value="80" className="w-full h-full" />
-                <span>{volumen}</span>
+            <div className="flex justify-between  gap-5 items-center">
+                <IoVolumeHighSharp className='text-4xl' />
+                <input onChange={handleChangeVolumen} type="range" min="0" max="100" value={volumen} className="w-full h-full" />
+                <span className="text-2xl">{volumen}</span>
             </div>
-        </motion.section>
+        </div>
     )
 }
