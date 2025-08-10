@@ -13,3 +13,12 @@ input[type="search"]::-webkit-search-cancel-button {
 input[type="search"]::-webkit-search-decoration {
     @apply appearance-none;
 }
+
+.scrollbar-none::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
