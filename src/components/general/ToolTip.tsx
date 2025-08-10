@@ -25,7 +25,7 @@ export default function Tooltip({ text, children, position = "top" }: TooltipPro
     }
     return (
         <div
-            className="relative inline-block"
+            className="relative inline-block h-full"
             onMouseEnter={handleClickHovered}
             onMouseLeave={handleClickHovered}
         >
@@ -37,7 +37,7 @@ export default function Tooltip({ text, children, position = "top" }: TooltipPro
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10 }}
-                        transition={{ duration: 0.5 }}
+                        transition={{ duration: 0.1 }}
                         className={`absolute ${positionClasses[position]} 
                             z-10 whitespace-nowrap rounded bg-black px-2 py-1 text-xs text-white shadow-md capitalize`}
                         dangerouslySetInnerHTML={{ __html: text }}
