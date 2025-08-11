@@ -20,7 +20,7 @@ export default function Bateria({ rendimiento, handleChangeRendimiento }: Bateri
                 <AnimatePresence>
                     {
                         isOpen && (
-                            <Container className="w-100 -left-49 -top-60" onClose={handleClose}>
+                            <Container className="w-100 bottom-1/12" onClose={handleClose}>
                                 <BateriaModal rendimiento={rendimiento} handleChangeRendimiento={handleChangeRendimiento} />
                             </Container>
                         )
