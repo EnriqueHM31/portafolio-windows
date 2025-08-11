@@ -1,8 +1,9 @@
 
 import FONDO from '@/assets/img/fondos/fondo.webp'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import BarraTareas from './components/BarraTareas'
 import { type Rendimiento, ModoRendimiento } from './types/barraTareas/Bateria'
+import { useStoreNotificaciones } from './store/barraTareas/Notificiaciones'
 
 const RENDIMIENTO_INITIAL = [
   { modo: ModoRendimiento.MaximaDuracion, active: false, value: 0 },
@@ -13,6 +14,7 @@ const RENDIMIENTO_INITIAL = [
 function App() {
 
   const [rendimiento, setRendimiento] = useState(RENDIMIENTO_INITIAL)
+  const obtenerNotificaciones = useStoreNotificaciones((state) => state.obtenerNotificaciones)
 
   const handleChangeRendimiento = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
@@ -34,6 +36,11 @@ function App() {
 
     return "bg-transparent";
   })();
+
+
+  useEffect(() => {
+    obtenerNotificaciones();
+  }, [])
 
   return (
     <>

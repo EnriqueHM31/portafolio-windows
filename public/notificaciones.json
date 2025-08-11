@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "header": "Disponibilidad",
+        "titulo": "Disponibilidad para trabajo",
+        "descripcion": "Disponibilidad activa, para trabajar en proyectos en donde intervenga JavaScript entre mis preferidos; React y Astro o solo HTML, CSS y JavaScript, Manejo de Tailwind",
+        "icono": "MdOutlineEventAvailable"
+    },
+    {
+        "id": 2,
+        "header": "Proyectos",
+        "titulo": "Proyectos Recientes",
+        "descripcion": "En mi GitHub, cuento con algunos proyectos como Frontend y algunas APIs que he utilizado en algunos proyectos",
+        "icono": "GrProjects"
+    },
+    {
+        "id": 3,
+        "header": "Estudios",
+        "titulo": "Cursando la carrera de Ingeniería en Sistemas Computacionales",
+        "descripcion": "Cursando la carrera de Ingeniería en Sistemas Computacionales, estoy aprendiendo sobre el desarrollo de aplicaciones web, desde el front-end hasta el back-end",
+        "icono": "PiStudentBold"
+    }
+]
