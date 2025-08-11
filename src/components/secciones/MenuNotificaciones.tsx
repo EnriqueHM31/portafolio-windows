@@ -2,6 +2,8 @@ import { MdClose } from "react-icons/md";
 import NotificacionIcon from "../Iconos/Notificaciones";
 import { useStoreNotificaciones } from "@/store/barraTareas/Notificiaciones";
 import { AnimatePresence, motion } from "framer-motion";
+import { useStoreAjustesPredeterminados } from "@/store/barraTareas/AjustesPredeterminados";
+import AjustesPredeterminadosIcon from "../Iconos/AjustesPredeterminados";
 
 interface Notificaciones {
     id: number;
@@ -11,23 +13,13 @@ interface Notificaciones {
     icono: string;
 }
 
-interface AjustesPredeterminados {
-    id: number;
-    icono: React.FC<React.SVGProps<SVGSVGElement>>;
-    titulo: string;
-    active: boolean;
-}
 
 interface NotificacionesProps {
     notificaciones: Notificaciones[];
-    ajustesPredeterminados: AjustesPredeterminados[];
-    handleClickActivarAjuste: (id: number) => void;
 }
 
 export default function MenuNotificaciones({
     notificaciones,
-    ajustesPredeterminados,
-    handleClickActivarAjuste,
 }: NotificacionesProps) {
     const handleEliminarNotificacion = useStoreNotificaciones(
         (state) => state.eliminarNotificacion
@@ -35,6 +27,12 @@ export default function MenuNotificaciones({
     const handleEliminarAllNotificaciones = useStoreNotificaciones(
         (state) => state.eliminarAllNotificaciones
     );
+
+    const ajustesPredeterminados = useStoreAjustesPredeterminados(
+        (state) => state.ajustesPredeterminados
+    );
+
+    const handleClickActivarAjuste = useStoreAjustesPredeterminados((state) => state.activarAjustePredeterminado)
 
     return (
         <section className="max-h-[94vh] overflow-y-auto h-full px-6 pt-5 flex flex-col gap-4 scrollbar-none">
@@ -105,13 +103,13 @@ export default function MenuNotificaciones({
                     <div
                         key={ajuste.id}
                         className={`flex-1 flex flex-col w-fit gap-3 p-3 transition duration-200 ease-in cursor-pointer ${ajuste.active
-                                ? "bg-blue-700 hover:bg-blue-800"
-                                : "bg-primary/15 hover:bg-primary/20"
+                            ? "bg-blue-700 hover:bg-blue-800"
+                            : "bg-primary/15 hover:bg-primary/20"
                             }`}
                         onClick={() => handleClickActivarAjuste(ajuste.id)}
                     >
                         <header>
-                            <ajuste.icono className="text-xl" />
+                            <AjustesPredeterminadosIcon nombreIcono={ajuste.icono} styles="text-base" />
                         </header>
                         <main className="h-full items-end flex">
                             <p className="text-[12px]">{ajuste.titulo}</p>

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import BarraTareas from './components/BarraTareas'
 import { type Rendimiento, ModoRendimiento } from './types/barraTareas/Bateria'
 import { useStoreNotificaciones } from './store/barraTareas/Notificiaciones'
+import { useStoreAjustesPredeterminados } from './store/barraTareas/AjustesPredeterminados'
 
 const RENDIMIENTO_INITIAL = [
   { modo: ModoRendimiento.MaximaDuracion, active: false, value: 0 },
@@ -15,6 +16,7 @@ function App() {
 
   const [rendimiento, setRendimiento] = useState(RENDIMIENTO_INITIAL)
   const obtenerNotificaciones = useStoreNotificaciones((state) => state.obtenerNotificaciones)
+  const obtenerAjustesPredeterminados = useStoreAjustesPredeterminados((state) => state.obtenerAjustesPredeterminados)
 
   const handleChangeRendimiento = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
@@ -40,6 +42,7 @@ function App() {
 
   useEffect(() => {
     obtenerNotificaciones();
+    obtenerAjustesPredeterminados();
   }, [])
 
   return (
