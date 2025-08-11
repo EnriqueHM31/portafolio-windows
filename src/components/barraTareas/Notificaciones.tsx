@@ -69,6 +69,7 @@ const AJUSTES_PREDETERMINADOS = [
 export default function Notificaciones() {
     const { isOpen, handleOpen, handleClose } = useOpen();
     const [ajustesPredeterminados, setAjustesPredeterminados] = useState(AJUSTES_PREDETERMINADOS)
+    const [notificaciones, setNotificaciones] = useState(NOTIFICACIONES)
 
     const handleClickActivarAjuste = (id: number) => {
         setAjustesPredeterminados(prev => prev.map(ajuste => {
@@ -82,7 +83,9 @@ export default function Notificaciones() {
         }));
     }
 
-    // Cerrar al hacer clic fuera
+    const handleEliminarNotificaciones = () => {
+        setNotificaciones([])
+    }
 
     return (
         <Tooltip text="Notificaciones no disponibles" position="top_left">
@@ -93,13 +96,19 @@ export default function Notificaciones() {
                 {/* Panel lateral */}{
                     isOpen && (
                         <Container className="w-110 right-0 top-0 -z-10 h-screen" onClose={handleClose} ajustesAnimacion={{ initial: { opacity: 0, x: 100 }, animate: { opacity: 1, x: 0 }, exit: { opacity: 0, x: 100 }, transition: { duration: 0.5 } }}>
-                            <MenuNotificaciones notificaciones={NOTIFICACIONES} ajustesPredeterminados={ajustesPredeterminados} handleClickActivarAjuste={handleClickActivarAjuste} />
+                            <MenuNotificaciones notificaciones={notificaciones} ajustesPredeterminados={ajustesPredeterminados} handleClickActivarAjuste={handleClickActivarAjuste}
+                                handleEliminarNotificaciones={handleEliminarNotificaciones}
+                            />
                         </Container>
                     )
                 }
 
                 {/* Icono */}
-                <div className="absolute bottom-2 right-1 size-4 text-secondary rounded-full bg-primary/80 border border-white flex items-center justify-center text-sm">{NOTIFICACIONES.length}</div>
+                {
+                    notificaciones.length > 0 && (
+                        <div className="absolute bottom-2 right-1 size-4 text-secondary rounded-full bg-primary/80 border border-white flex items-center justify-center text-sm">{notificaciones.length}</div>
+                    )
+                }
                 <LiaComment className="text-2xl" />
             </span>
         </Tooltip >

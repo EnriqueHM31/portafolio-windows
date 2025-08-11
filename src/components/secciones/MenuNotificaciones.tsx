@@ -19,11 +19,12 @@ interface NotificacionesProps {
     notificaciones: Notificaciones[]
     ajustesPredeterminados: AjustesPredeterminados[]
     handleClickActivarAjuste: (id: number) => void
+    handleEliminarNotificaciones: () => void
 }
 
 
 
-export default function MenuNotificaciones({ notificaciones, ajustesPredeterminados, handleClickActivarAjuste }: NotificacionesProps) {
+export default function MenuNotificaciones({ notificaciones, ajustesPredeterminados, handleClickActivarAjuste, handleEliminarNotificaciones }: NotificacionesProps) {
 
     return (
         <section
@@ -58,10 +59,17 @@ export default function MenuNotificaciones({ notificaciones, ajustesPredetermina
                 );
             })}
 
-
-            <div className="flex justify-end" data-ignore-outside>
-                <button className="text-primary hover:text-primary/70 transition duration-200 ease-in-out cursor-pointer">Borrar todas las notificaciones</button>
-            </div>
+            {
+                notificaciones.length === 0 ? (
+                    <div className="flex justify-center items-center h-full">
+                        <span className="text-primary/50">No hay notificaciones</span>
+                    </div>
+                ) : (
+                    <div className="flex justify-end" data-ignore-outside>
+                        <button className="text-primary hover:text-primary/70 transition duration-200 ease-in-out cursor-pointer" onClick={handleEliminarNotificaciones}>Borrar todas las notificaciones</button>
+                    </div>
+                )
+            }
 
             <div className="flex gap-1 py-3 rounded-xl " data-ignore-outside>
                 {ajustesPredeterminados.map((ajuste) => (
