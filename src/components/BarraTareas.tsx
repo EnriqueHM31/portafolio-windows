@@ -1,11 +1,11 @@
 import { type Rendimiento } from "@/types/barraTareas/Bateria";
 import { FaWindows } from "react-icons/fa";
-import { LiaComment } from "react-icons/lia";
 import { VscSearch } from "react-icons/vsc";
 import { APPS_PREDETERMINADAS } from "../constants/Aplicaciones";
-import AppTareas from "./AppTareas";
+import AppTareas from "./aplicaciones/AppTareas";
 import Bateria from "./barraTareas/Bateria";
 import Hora from "./barraTareas/Hora";
+import Notificaciones from "./barraTareas/Notificaciones";
 import Volumen from "./barraTareas/Volumen";
 import Wifi from "./barraTareas/Wifi";
 import Tooltip from "./general/ToolTip";
@@ -18,7 +18,7 @@ interface BarraTareasProps {
 export default function BarraTareas({ rendimiento, handleChangeRendimiento }: BarraTareasProps) {
 
     return (
-        <section className="relative w-full z-200 bg-black/90 text-white flex items-center max-w-full mx-auto ">
+        <section className=" w-full z-50 bg-black text-white flex items-center max-w-full mx-auto ">
             {/* Botón de inicio */}
             <div className='flex items-center h-full group '>
                 <Tooltip text="Inicio" position="top">
@@ -52,7 +52,7 @@ export default function BarraTareas({ rendimiento, handleChangeRendimiento }: Ba
             </div>
 
             {/* Hora */}
-            <div className='flex items-center gap-2 ps-4 h-full'>
+            <div className='flex items-center gap-2 ps-4 h-full z-50 bg-black'>
                 <Wifi />
 
                 <Bateria rendimiento={rendimiento} handleChangeRendimiento={handleChangeRendimiento} />
@@ -61,16 +61,9 @@ export default function BarraTareas({ rendimiento, handleChangeRendimiento }: Ba
 
                 <Hora />
 
-                <Tooltip text="Notificaciones no disponibles" position="top_left">
-                    <span className='hover:bg-white/20 h-full flex items-center justify-center px-2 cursor-pointer'>
-
-                        <LiaComment className=' text-2xl' />
-                    </span>
-                </Tooltip>
-
+                <Notificaciones />
 
                 <div className='border-s border-white/50 h-11 w-2 hover:bg-white/20 cursor-pointer'>
-
                 </div>
             </div>
         </section>

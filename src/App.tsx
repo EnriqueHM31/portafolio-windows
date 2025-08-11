@@ -38,7 +38,7 @@ function App() {
   return (
     <>
       <div className={`absolute top-0 left-0 w-full h-full z-100 pointer-events-none ${fondoRendimiento}`}></div>
-      <section className="w-full h-screen relative grid grid-rows-[1fr_auto] overflow-hidden">
+      <section className="w-full h-screen  grid grid-rows-[1fr_auto] overflow-hidden">
         {/* Fondo */}
         <div
           className="absolute inset-0 bg-cover bg-center"
