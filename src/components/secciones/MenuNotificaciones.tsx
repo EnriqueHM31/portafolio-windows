@@ -25,13 +25,9 @@ interface NotificacionesProps {
 
 export default function MenuNotificaciones({ notificaciones, ajustesPredeterminados, handleClickActivarAjuste }: NotificacionesProps) {
 
-
-    // Cerrar al hacer clic fuera
-
-
     return (
         <section
-            className={`max-h-[94vh] overflow-y-auto h-full px-6 pt-5 flex flex-col gap-4`}
+            className={`max-h-[94vh] overflow-y-auto h-full px-6 pt-5 flex flex-col gap-4 scrollbar-none`}
         >
             {notificaciones.map((notificacion) => {
                 const Icon = notificacion.icono;

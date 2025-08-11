@@ -88,13 +88,7 @@ export default function Notificaciones() {
         <Tooltip text="Notificaciones no disponibles" position="top_left">
             <span
                 className="hover:bg-white/20 h-full flex items-center justify-center px-2 cursor-pointer"
-                onClick={() => {
-                    if (isOpen) {
-                        handleClose();
-                    } else {
-                        handleOpen("Notificaciones-Tareas");
-                    }
-                }}
+                onClick={() => { handleOpen("Notificaciones-Tareas") }}
             >
                 {/* Panel lateral */}{
                     isOpen && (
@@ -108,6 +102,6 @@ export default function Notificaciones() {
                 <div className="absolute bottom-2 right-1 size-4 text-secondary rounded-full bg-primary/80 border border-white flex items-center justify-center text-sm">{NOTIFICACIONES.length}</div>
                 <LiaComment className="text-2xl" />
             </span>
-        </Tooltip>
+        </Tooltip >
     );
 }
