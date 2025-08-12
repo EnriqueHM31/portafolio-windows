@@ -1,3 +1,5 @@
+import AplicacionesPredeterminadasIcon from "../Iconos/AplicacionesPredeterminadas"
+
 interface AppTareasProps {
     icono: string
     active: boolean
@@ -13,7 +15,9 @@ export default function AppTareas({ icono, active }: AppTareasProps) {
             }
 
             <div className={`w-full h-full p-1 flex items-center justify-center`}>
-                <img src={icono} alt="icono" className="max-w-10/12" />
+                {
+                    AplicacionesPredeterminadasIcon({ nombreIcono: icono })
+                }
             </div>
         </button >
     )

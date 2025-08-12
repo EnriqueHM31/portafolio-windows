@@ -6,9 +6,8 @@ interface TooltipProps {
     children: React.ReactNode
     position?: "top" | "bottom" | "left" | "right" | "top_right" | "bottom_right" | "top_left"
 }
-
 export default function Tooltip({ text, children, position = "top" }: TooltipProps) {
-    const [isHovered, setIsHovered] = useState(false)
+    const [isHovered, setIsHovered] = useState(false);
 
     const positionClasses = {
         top: "bottom-full mb-2 left-1/2 -translate-x-1/2",
@@ -18,16 +17,13 @@ export default function Tooltip({ text, children, position = "top" }: TooltipPro
         top_right: "bottom-full mb-2 right-1/2 -translate-x-3/4",
         bottom_right: "top-full mt-2 right-1/2 -translate-x-1/2",
         top_left: "bottom-full mb-2 left-1/2 -translate-x-10/12",
-    }
+    };
 
-    const handleClickHovered = () => {
-        setIsHovered(!isHovered)
-    }
     return (
         <div
-            className="relative inline-block h-full "
-            onMouseEnter={handleClickHovered}
-            onMouseLeave={handleClickHovered}
+            className="relative h-full rounded-none flex items-center justify-center"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
         >
             {children}
             <AnimatePresence>
@@ -39,12 +35,11 @@ export default function Tooltip({ text, children, position = "top" }: TooltipPro
                         exit={{ opacity: 0, y: 10 }}
                         transition={{ duration: 0.1 }}
                         className={`absolute ${positionClasses[position]} 
-                            -z-40 whitespace-nowrap rounded bg-black px-2 py-1 text-xs text-white shadow-md capitalize`}
+                            -z-40 whitespace-nowrap rounded bg-black px-2 py-1 text-xs text-white shadow-md capitalize pointer-events-none`}
                         dangerouslySetInnerHTML={{ __html: text }}
-                    >
-                    </motion.span>
+                    />
                 )}
             </AnimatePresence>
         </div>
-    )
+    );
 }

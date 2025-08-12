@@ -6,27 +6,29 @@ import { useStoreAjustesPredeterminados } from './store/barraTareas/AjustesPrede
 import { useStoreBateriaRendimiento } from './store/barraTareas/BateriaRendimiento'
 import { useStoreNotificaciones } from './store/barraTareas/Notificiaciones'
 import { fondoRendimiento } from './utils/barraTareas/Bateria'
+import { useStoreAplicacionesPredeterminadas } from './store/aplicaciones/AplicacionesPredeterminadas'
 
 
 function App() {
 
-  const obtenerNotificaciones = useStoreNotificaciones((state) => state.obtenerNotificaciones)
-  const obtenerAjustesPredeterminados = useStoreAjustesPredeterminados((state) => state.obtenerAjustesPredeterminados)
-  const AjustesPredeterminadosActivos = useStoreAjustesPredeterminados(state => state.ajustesPredeterminadosActivados);
+  const { obtenerNotificaciones } = useStoreNotificaciones()
 
-  const obtenerRendimientosBateria = useStoreBateriaRendimiento((state) => state.obtenerRendimiento)
-  const rendimientoActivado = useStoreBateriaRendimiento((state) => state.rendimientoActivado)
+  const { obtenerAjustesPredeterminados, ajustesPredeterminadosActivados } = useStoreAjustesPredeterminados()
+
+  const { rendimientoActivado, obtenerRendimiento } = useStoreBateriaRendimiento()
+  const { obtenerAplicacionesPredeterminadas } = useStoreAplicacionesPredeterminadas();
 
   useEffect(() => {
     obtenerNotificaciones();
     obtenerAjustesPredeterminados();
-    obtenerRendimientosBateria();
+    obtenerRendimiento();
+    obtenerAplicacionesPredeterminadas();
   }, [])
 
   return (
     <>
       {
-        AjustesPredeterminadosActivos.find(ajuste => ajuste.titulo === "Luz Nocturna") && (
+        ajustesPredeterminadosActivados.find(ajuste => ajuste.titulo === "Luz Nocturna") && (
           <div className={`absolute top-0 left-0 w-full h-full z-100 pointer-events-none bg-yellow-200/15`}></div>
 
         )
