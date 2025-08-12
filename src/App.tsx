@@ -7,6 +7,7 @@ import { useStoreBateriaRendimiento } from './store/barraTareas/BateriaRendimien
 import { useStoreNotificaciones } from './store/barraTareas/Notificiaciones'
 import { fondoRendimiento } from './utils/barraTareas/Bateria'
 import { useStoreAplicacionesPredeterminadas } from './store/aplicaciones/AplicacionesPredeterminadas'
+import { useStoreWifis } from './store/barraTareas/Wifis'
 
 
 function App() {
@@ -18,11 +19,14 @@ function App() {
   const { rendimientoActivado, obtenerRendimiento } = useStoreBateriaRendimiento()
   const { obtenerAplicacionesPredeterminadas } = useStoreAplicacionesPredeterminadas();
 
+  const { obtenerWifis } = useStoreWifis();
+
   useEffect(() => {
     obtenerNotificaciones();
     obtenerAjustesPredeterminados();
     obtenerRendimiento();
     obtenerAplicacionesPredeterminadas();
+    obtenerWifis();
   }, [])
 
   return (

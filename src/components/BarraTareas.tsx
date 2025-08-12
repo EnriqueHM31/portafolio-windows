@@ -17,6 +17,7 @@ export default function BarraTareas() {
     const { aplicacionesPredeterminadas } = useStoreAplicacionesPredeterminadas();
 
 
+
     return (
         <section className=" w-full z-50 bg-black text-white flex items-center max-w-full mx-auto ps-1 ">
             {/* Botón de inicio */}
@@ -58,7 +59,6 @@ export default function BarraTareas() {
                 }
 
                 <Wifi />
-
                 <Bateria />
 
                 <Volumen />

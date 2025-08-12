@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 
 export function useAction<Args extends unknown[]>(
-    action: (...args: Args) => Promise<void>
+    action: (...args: Args) => void | Promise<void>
 ) {
     const [isPending, setIsPending] = useState(false);
     const [isError, setIsError] = useState({
