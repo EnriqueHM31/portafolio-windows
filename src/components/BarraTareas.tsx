@@ -3,7 +3,7 @@ import { FaWindows } from "react-icons/fa";
 import { VscSearch } from "react-icons/vsc";
 import { APPS_PREDETERMINADAS } from "../constants/Aplicaciones";
 import AppTareas from "./aplicaciones/AppTareas";
-import AjustesPredeterminados from "./barraTareas/AjustesPredterminados";
+import AjustesPredeterminados from "./barraTareas/AjustesPredeterminados";
 import Bateria from "./barraTareas/Bateria";
 import Hora from "./barraTareas/Hora";
 import Notificaciones from "./barraTareas/Notificaciones";

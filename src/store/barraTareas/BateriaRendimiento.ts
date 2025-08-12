@@ -26,11 +26,16 @@ export const useStoreBateriaRendimiento = create<StoreBateriaRendimiento>((set) 
     rendimientos: loadFromLocalStorage("rendimientos") || [],
     obtenerRendimiento: async () => {
         const guardados = loadFromLocalStorage("rendimientos");
+        const RendimientoDefectoGuardado = guardados.find((r: Rendimiento) => r.active);
         if (guardados && guardados.length > 0) {
             set({
                 rendimientos: guardados,
             });
             return; // no sobreescribas si ya hay datos en localStorage
+        }
+        if (RendimientoDefectoGuardado === EnumModoRendimiento.MaximaDuracion) {
+            const modificarAjusteAhorroBateria = useStoreAjustesPredeterminados.getState().modificarAjusteAhorroBateria;
+            modificarAjusteAhorroBateria();
         }
 
         // Si no hay datos, sí haz fetch
@@ -61,15 +66,20 @@ export const useStoreBateriaRendimiento = create<StoreBateriaRendimiento>((set) 
 
             const RendimientoDefecto = rendimientosModificados.find((r) => r.active);
 
-            if (RendimientoDefecto?.modo !== EnumModoRendimiento.MaximaDuracion) {
-                const modificarAjusteAhorroBateria = useStoreAjustesPredeterminados.getState().modificarAjusteAhorroBateria;
-                modificarAjusteAhorroBateria();
-            }
-
             localStorage.setItem("rendimientoActivado", JSON.stringify(RendimientoDefecto));
             localStorage.setItem("rendimientos", JSON.stringify(rendimientosModificados));
 
 
+
+            if (RendimientoDefecto?.modo === EnumModoRendimiento.MaximaDuracion) {
+                const modificarAjusteAhorroBateria = useStoreAjustesPredeterminados.getState().modificarAjusteAhorroBateria;
+                modificarAjusteAhorroBateria();
+            }
+
+            if (RendimientoDefecto?.modo !== EnumModoRendimiento.MaximaDuracion) {
+                const modificarAjusteAhorroBateria = useStoreAjustesPredeterminados.getState().activarAjustePredeterminado;
+                modificarAjusteAhorroBateria(2);
+            }
             return {
                 rendimientoActivado: rendimientosModificados.find((r) => r.active),
                 rendimientos: rendimientosModificados,

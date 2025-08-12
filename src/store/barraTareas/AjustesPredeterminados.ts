@@ -110,7 +110,7 @@ export const useStoreAjustesPredeterminados = create<StoreAjustesPredeterminados
             const nuevos = state.ajustesPredeterminados.map(a => {
                 if (a.id !== 2) return a;
 
-                const nuevoEstado = false;
+                const nuevoEstado = true;
 
                 return {
                     ...a,
