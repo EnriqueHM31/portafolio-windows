@@ -9,6 +9,8 @@ import Notificaciones from "./barraTareas/Notificaciones";
 import Volumen from "./barraTareas/Volumen";
 import Wifi from "./barraTareas/Wifi";
 import Tooltip from "./general/ToolTip";
+import AjustesPredeterminados from "./barraTareas/AjustesPredterminados";
+import { useStoreAjustesPredeterminados } from "@/store/barraTareas/AjustesPredeterminados";
 
 interface BarraTareasProps {
     rendimiento: Rendimiento[]
@@ -16,6 +18,8 @@ interface BarraTareasProps {
 }
 
 export default function BarraTareas({ rendimiento, handleChangeRendimiento }: BarraTareasProps) {
+
+    const ajustesPredeterminadosActivados = useStoreAjustesPredeterminados(state => state.ajustesPredeterminadosActivados);
 
     return (
         <section className=" w-full z-50 bg-black text-white flex items-center max-w-full mx-auto ">
@@ -53,6 +57,12 @@ export default function BarraTareas({ rendimiento, handleChangeRendimiento }: Ba
 
             {/* Hora */}
             <div className='flex items-center gap-2 ps-4 h-full z-50 bg-black'>
+                {
+                    ajustesPredeterminadosActivados.length > 0 && (
+                        <AjustesPredeterminados />
+                    )
+                }
+
                 <Wifi />
 
                 <Bateria rendimiento={rendimiento} handleChangeRendimiento={handleChangeRendimiento} />
@@ -62,6 +72,7 @@ export default function BarraTareas({ rendimiento, handleChangeRendimiento }: Ba
                 <Hora />
 
                 <Notificaciones />
+
 
                 <div className='border-s border-white/50 h-11 w-2 hover:bg-white/20 cursor-pointer'>
                 </div>
