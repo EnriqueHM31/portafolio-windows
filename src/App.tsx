@@ -17,6 +17,7 @@ function App() {
   const [rendimiento, setRendimiento] = useState(RENDIMIENTO_INITIAL)
   const obtenerNotificaciones = useStoreNotificaciones((state) => state.obtenerNotificaciones)
   const obtenerAjustesPredeterminados = useStoreAjustesPredeterminados((state) => state.obtenerAjustesPredeterminados)
+  const AjustesPredeterminadosActivos = useStoreAjustesPredeterminados(state => state.ajustesPredeterminadosActivados);
 
   const handleChangeRendimiento = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
@@ -45,8 +46,15 @@ function App() {
     obtenerAjustesPredeterminados();
   }, [])
 
+  console.log(AjustesPredeterminadosActivos)
   return (
     <>
+      {
+        AjustesPredeterminadosActivos.find(ajuste => ajuste.titulo === "Luz Nocturna") && (
+          <div className={`absolute top-0 left-0 w-full h-full z-100 pointer-events-none bg-yellow-200/15`}></div>
+
+        )
+      }
       <div className={`absolute top-0 left-0 w-full h-full z-100 pointer-events-none ${fondoRendimiento}`}></div>
       <section className="w-full h-screen  grid grid-rows-[1fr_auto] overflow-hidden">
         {/* Fondo */}
