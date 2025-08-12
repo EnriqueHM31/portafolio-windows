@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "modo": "Maxima Duracion",
+        "active": false,
+        "value": 0
+    },
+    {
+        "id": 2,
+        "modo": "Equilibrado",
+        "active": false,
+        "value": 50
+    },
+    {
+        "id": 3,
+        "modo": "Maximo Rendimiento",
+        "active": true,
+        "value": 100
+    }
+]
