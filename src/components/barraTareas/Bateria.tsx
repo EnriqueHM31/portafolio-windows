@@ -1,17 +1,12 @@
 import Tooltip from "@/components/general/ToolTip";
-import { PiBatteryHighFill } from "react-icons/pi";
-import { AnimatePresence } from "framer-motion";
-import Container from "../secciones/Container";
-import { useOpen } from "@/hooks/general/useOpen";
 import BateriaModal from "@/components/secciones/Bateria";
-import { type Rendimiento } from "@/types/barraTareas/Bateria";
+import { useOpen } from "@/hooks/general/useOpen";
+import { AnimatePresence } from "framer-motion";
+import { PiBatteryHighFill } from "react-icons/pi";
+import Container from "../secciones/Container";
 
-interface BateriaProps {
-    rendimiento: Rendimiento[]
-    handleChangeRendimiento: (event: React.ChangeEvent<HTMLInputElement>) => void
-}
 
-export default function Bateria({ rendimiento, handleChangeRendimiento }: BateriaProps) {
+export default function Bateria() {
 
     const { isOpen, handleOpen, handleClose } = useOpen()
     return (
@@ -21,7 +16,7 @@ export default function Bateria({ rendimiento, handleChangeRendimiento }: Bateri
                     {
                         isOpen && (
                             <Container className="w-100 bottom-1/12" onClose={handleClose}>
-                                <BateriaModal rendimiento={rendimiento} handleChangeRendimiento={handleChangeRendimiento} />
+                                <BateriaModal />
                             </Container>
                         )
                     }
