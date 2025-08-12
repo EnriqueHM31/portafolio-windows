@@ -14,25 +14,27 @@ export default function Wifi() {
     const HayUnWifiConectado = wifis.find(w => w.conectado);
     const { isOpen, handleOpen, handleClose } = useOpen()
     return (
-        <Tooltip text="INFINITUM_LEHM<br/>Acceso a Internet" position="top">
-            <span className='hover:bg-white/20 h-full flex items-center justify-center px-1 cursor-pointer' onClick={() => handleOpen("Wifi-Tareas")}>
-                <AnimatePresence>
+        <div className="relative">
+            <Tooltip text="INFINITUM_LEHM<br/>Acceso a Internet" position="top">
+                <span className='hover:bg-white/20 h-full flex items-center justify-center px-1 cursor-pointer' onClick={() => handleOpen("Wifi-Tareas")}>
                     {
-                        isOpen && (
-                            <Container className="w-102 h-115 bottom-1/12 overflow-y-auto scrollbar-none rounded-xl" onClose={handleClose}>
-                                <WifiModal />
-                            </Container>
+                        HayUnWifiConectado ? (
+                            <IoWifiOutline className='text-xl' />
+                        ) : (
+                            <FiWifiOff className='text-xl' />
                         )
                     }
-                </AnimatePresence>
+                </span>
+            </Tooltip>
+            <AnimatePresence>
                 {
-                    HayUnWifiConectado ? (
-                        <IoWifiOutline className='text-xl' />
-                    ) : (
-                        <FiWifiOff className='text-xl' />
+                    isOpen && (
+                        <Container className="w-102 h-115 bottom-1/12 right-10 overflow-y-auto scrollbar-none rounded-xl" onClose={handleClose}>
+                            <WifiModal />
+                        </Container>
                     )
                 }
-            </span>
-        </Tooltip>
+            </AnimatePresence>
+        </div>
     )
 }

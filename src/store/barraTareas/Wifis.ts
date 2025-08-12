@@ -64,6 +64,7 @@ export const useStoreWifis = create<StoreWifis>((set) => ({
 
     openFormPassword: (id) => {
         set((state) => {
+            console.log({ id });
             const nuevos = state.wifis.map(w => ({ ...w, openPassword: w.id === id }));
             saveToLocalStorage(nuevos);
 
@@ -93,7 +94,7 @@ export const useStoreWifis = create<StoreWifis>((set) => ({
                         const nuevos = state.wifis.map(w => ({
                             ...w,
                             conectado: id === w.id,
-                            bloqueado: false,
+                            bloqueado: (id === w.id) ? false : w.bloqueado,
                         }));
                         const nuevosOrdenados = nuevos.toSorted((a, b) => Number(b.conectado) - Number(a.conectado));
 
@@ -131,7 +132,9 @@ export const useStoreWifis = create<StoreWifis>((set) => ({
         set((state) => {
             const nuevos = state.wifis.map(w => ({
                 ...w,
-                abierto: w.id === id, // solo este se abre, todos los demás false
+                abierto: w.id === id,
+                openPassword: false,
+                passwordUsuario: w.bloqueado ? "" : w.passwordUsuario,
             }));
             saveToLocalStorage(nuevos);
             return { wifis: nuevos };

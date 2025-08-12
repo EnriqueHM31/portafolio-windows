@@ -166,7 +166,8 @@ export default function Wifi() {
                                     <div className="flex items-center justify-end  ">
                                         <button
                                             className="bg-white/25 w-fit px-4 py-1 rounded hover:bg-white/10 transition duration-200 ease-in cursor-pointer"
-                                            onClick={() => {
+                                            onClick={(e) => {
+                                                e.stopPropagation();
                                                 handleClickOpenPassword(wifi.id);
                                             }}>
                                             {
