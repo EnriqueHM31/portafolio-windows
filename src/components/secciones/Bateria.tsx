@@ -7,7 +7,6 @@ interface BateriaModalProps {
 }
 
 export default function Bateria({ rendimiento, handleChangeRendimiento }: BateriaModalProps) {
-    console.log({ rendimiento })
     return (
         <div className="flex flex-col gap-6 p-5">
             <header className="flex items-center gap-5">
