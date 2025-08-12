@@ -15,7 +15,7 @@
         "id": 3,
         "icono": "FaBluetoothB",
         "titulo": "No conectado",
-        "active": true
+        "active": false
     },
     {
         "id": 4,

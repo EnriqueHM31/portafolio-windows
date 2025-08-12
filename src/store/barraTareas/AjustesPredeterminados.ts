@@ -63,9 +63,20 @@ export const useStoreAjustesPredeterminados = create<StoreAjustesPredeterminados
 
     activarAjustePredeterminado: (id) => {
         set((state) => {
-            const nuevos = state.ajustesPredeterminados.map(a =>
-                a.id === id ? { ...a, active: !a.active } : a
-            );
+            const nuevos = state.ajustesPredeterminados.map(a => {
+                if (a.id !== id) return a;
+
+                const nuevoEstado = !a.active;
+
+                return {
+                    ...a,
+                    active: nuevoEstado,
+                    titulo:
+                        a.id === 3
+                            ? a.active ? "No conectado" : "Conectado"
+                            : a.titulo
+                };
+            });
             localStorage.setItem("ajustesPredeterminados", JSON.stringify(nuevos));
             localStorage.setItem("ajustesPredeterminadosActivos", JSON.stringify(nuevos.filter(a => a.active)));
             return {
@@ -77,9 +88,20 @@ export const useStoreAjustesPredeterminados = create<StoreAjustesPredeterminados
 
     desactivarAjustePredeterminado: (id) => {
         set((state) => {
-            const nuevos = state.ajustesPredeterminados.map(a =>
-                a.id === id ? { ...a, active: false } : a
-            );
+            const nuevos = state.ajustesPredeterminados.map(a => {
+                if (a.id !== id) return a;
+
+                const nuevoEstado = false;
+
+                return {
+                    ...a,
+                    active: nuevoEstado,
+                    titulo:
+                        a.id === 3
+                            ? a.active ? "No conectado" : "Conectado"
+                            : a.titulo
+                };
+            });
             localStorage.setItem("ajustesPredeterminados", JSON.stringify(nuevos));
             localStorage.setItem("ajustesPredeterminadosActivos", JSON.stringify(nuevos.filter(a => a.active)));
             return {
