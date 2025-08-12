@@ -9,8 +9,8 @@ interface StoreBateriaRendimiento {
     rendimientoAntiguo: Rendimiento | null;
     obtenerRendimiento: () => Promise<void>;
     cambiarRendimiento: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    forzarMaximaDuracion: () => void; // activar ahorro
-    restaurarRendimientoAnterior: () => void; // desactivar ahorro
+    forzarMaximaDuracion: () => void;
+    restaurarRendimientoAnterior: () => void;
 }
 
 const loadFromLocalStorage = <T,>(key: string): T | null => {
@@ -20,6 +20,12 @@ const loadFromLocalStorage = <T,>(key: string): T | null => {
     } catch {
         return null;
     }
+};
+
+const saveToLocalStorage = (data: Partial<Record<keyof typeof BATERIA_LOCALSTORAGE_KEYS, unknown>>) => {
+    Object.entries(data).forEach(([key, value]) => {
+        localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS[key as keyof typeof BATERIA_LOCALSTORAGE_KEYS], JSON.stringify(value));
+    });
 };
 
 export const useStoreBateriaRendimiento = create<StoreBateriaRendimiento>((set, get) => ({
@@ -35,16 +41,13 @@ export const useStoreBateriaRendimiento = create<StoreBateriaRendimiento>((set, 
     obtenerRendimiento: async () => {
         const guardados = loadFromLocalStorage<Rendimiento[]>(BATERIA_LOCALSTORAGE_KEYS.rendimientos);
 
-        if (guardados && guardados.length > 0) {
-            console.log("guardados", guardados);
-            const rendimientoMaximaDuracion = guardados.find(r => r.modo === EnumModoRendimiento.MaximaDuracion);
-
-            if (rendimientoMaximaDuracion?.active) {
-                const forzarMaximaDuracion = useStoreAjustesPredeterminados.getState().activarAhorroBateria;
-                forzarMaximaDuracion();
-            } else if (!rendimientoMaximaDuracion?.active) {
-                const restaurarRendimientoAnterior = useStoreAjustesPredeterminados.getState().desactivarAhorroBateria;
-                restaurarRendimientoAnterior();
+        if (guardados?.length) {
+            const maxDuracionActivo = guardados.some(r => r.modo === EnumModoRendimiento.MaximaDuracion && r.active);
+            const ajustes = useStoreAjustesPredeterminados.getState();
+            if (maxDuracionActivo) {
+                ajustes.activarAhorroBateria();
+            } else {
+                ajustes.desactivarAhorroBateria();
             }
             set({ rendimientos: guardados });
             return;
@@ -54,9 +57,11 @@ export const useStoreBateriaRendimiento = create<StoreBateriaRendimiento>((set, 
         const json: Rendimiento[] = await res.json();
         const activo = json.find(r => r.active) || json[0];
 
-        localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientoActivado, JSON.stringify(activo));
-        localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientos, JSON.stringify(json));
-        localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientoAntiguo, JSON.stringify(activo));
+        saveToLocalStorage({
+            rendimientoActivado: activo,
+            rendimientos: json,
+            rendimientoAntiguo: activo
+        });
 
         set({
             rendimientoActivado: activo,
@@ -67,59 +72,45 @@ export const useStoreBateriaRendimiento = create<StoreBateriaRendimiento>((set, 
 
     cambiarRendimiento: (event) => {
         const value = Number(event.target.value);
+        const nuevos = get().rendimientos.map(r => ({ ...r, active: r.value === value }));
+        const nuevoActivo = nuevos.find(r => r.active)!;
 
-        set((state) => {
-            const nuevos = state.rendimientos.map(r => ({
-                ...r,
-                active: r.value === value
-            }));
+        if (nuevoActivo.modo !== EnumModoRendimiento.MaximaDuracion) {
+            saveToLocalStorage({ rendimientoAntiguo: nuevoActivo });
+        } else {
+            useStoreAjustesPredeterminados.getState().activarAhorroBateria();
+        }
 
-            const nuevoActivo = nuevos.find(r => r.active)!;
-            const activoMaximaDuracion = nuevos.find(r => r.modo === EnumModoRendimiento.MaximaDuracion);
-            console.log(nuevoActivo);
-            console.log(activoMaximaDuracion);
-            // Si NO es máxima duración, lo guardamos como antiguo
-            if (nuevoActivo.modo !== EnumModoRendimiento.MaximaDuracion) {
-                localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientoAntiguo, JSON.stringify(nuevoActivo));
-            }
+        saveToLocalStorage({
+            rendimientoActivado: nuevoActivo,
+            rendimientos: nuevos
+        });
 
-            if (nuevoActivo.active && nuevoActivo.modo === EnumModoRendimiento.MaximaDuracion) {
-                const activarAjustePredeterminado = useStoreAjustesPredeterminados.getState().activarAhorroBateria;
-                activarAjustePredeterminado();
-            }
-
-            localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientoActivado, JSON.stringify(nuevoActivo));
-            localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientos, JSON.stringify(nuevos));
-            localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientoAntiguo, JSON.stringify(nuevoActivo));
-
-            return {
-                rendimientoActivado: nuevoActivo,
-                rendimientos: nuevos,
-                rendimientoAntiguo: nuevoActivo.modo !== EnumModoRendimiento.MaximaDuracion
-                    ? nuevoActivo
-                    : state.rendimientoAntiguo,
-            };
+        set({
+            rendimientoActivado: nuevoActivo,
+            rendimientos: nuevos,
+            rendimientoAntiguo: nuevoActivo.modo !== EnumModoRendimiento.MaximaDuracion
+                ? nuevoActivo
+                : get().rendimientoAntiguo,
         });
     },
 
     forzarMaximaDuracion: () => {
         const { rendimientos, rendimientoActivado } = get();
 
-        // Guardamos el actual como antiguo antes de cambiar
         if (rendimientoActivado.modo !== EnumModoRendimiento.MaximaDuracion) {
-            localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientoAntiguo, JSON.stringify(rendimientoActivado));
+            saveToLocalStorage({ rendimientoAntiguo: rendimientoActivado });
         }
 
         const maxDuracion = rendimientos.find(r => r.modo === EnumModoRendimiento.MaximaDuracion);
         if (!maxDuracion) return;
 
-        const nuevos = rendimientos.map(r => ({
-            ...r,
-            active: r.modo === EnumModoRendimiento.MaximaDuracion
-        }));
+        const nuevos = rendimientos.map(r => ({ ...r, active: r === maxDuracion }));
 
-        localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientoActivado, JSON.stringify(maxDuracion));
-        localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientos, JSON.stringify(nuevos));
+        saveToLocalStorage({
+            rendimientoActivado: maxDuracion,
+            rendimientos: nuevos
+        });
 
         set({
             rendimientoActivado: maxDuracion,
@@ -131,13 +122,12 @@ export const useStoreBateriaRendimiento = create<StoreBateriaRendimiento>((set, 
         const { rendimientoAntiguo, rendimientos } = get();
         if (!rendimientoAntiguo) return;
 
-        const nuevos = rendimientos.map(r => ({
-            ...r,
-            active: r.modo === rendimientoAntiguo.modo
-        }));
+        const nuevos = rendimientos.map(r => ({ ...r, active: r.modo === rendimientoAntiguo.modo }));
 
-        localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientoActivado, JSON.stringify(rendimientoAntiguo));
-        localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientos, JSON.stringify(nuevos));
+        saveToLocalStorage({
+            rendimientoActivado: rendimientoAntiguo,
+            rendimientos: nuevos
+        });
 
         set({
             rendimientoActivado: rendimientoAntiguo,
