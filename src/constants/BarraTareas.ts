@@ -1,3 +1,4 @@
+
 export const COLORES_AJUSTESPREDETERMINADOS: Record<string, string> = {
     SiGooglemaps: "text-red-300",
     MdEco: "text-green-500",
@@ -8,5 +9,10 @@ export const COLORES_AJUSTESPREDETERMINADOS: Record<string, string> = {
 export const BATERIA_LOCALSTORAGE_KEYS = {
     rendimientos: "rendimientos",
     rendimientoActivado: "rendimientoActivado",
-    rendimientoAntiguo: "rendimientoAntiguo"
+    rendimientoAntiguo: "rendimientoAntiguo",
+    Bateria: "bateria",
+}
+
+export const VOLUMEN_LOCALSTORAGE_KEYS = {
+    volumen: "volumen",
 }

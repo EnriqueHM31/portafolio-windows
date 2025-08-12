@@ -1,16 +1,16 @@
 import Tooltip from "@/components/general/ToolTip";
-import { useOpen } from "@/hooks/general/useOpen";
-import { IoVolumeHighSharp } from "react-icons/io5";
 import VolumenModal from "@/components/secciones/Volumen";
-import { useVolumen } from "@/hooks/barraTareas/useVolumen";
-import Container from "../secciones/Container";
+import { useOpen } from "@/hooks/general/useOpen";
+import { useStoreVolumen } from "@/store/barraTareas/Volumen";
 import { AnimatePresence } from "framer-motion";
+import { IoVolumeHighSharp } from "react-icons/io5";
+import Container from "../secciones/Container";
 
 export default function Volumen() {
 
     const { isOpen, handleOpen, handleClose } = useOpen()
-    const { volumen, handleChangeVolumen } = useVolumen()
 
+    const { volumen } = useStoreVolumen()
     return (
         <>
 
@@ -20,7 +20,7 @@ export default function Volumen() {
                         {
                             isOpen && (
                                 <Container className="w-70  bottom-1/12 rounded-xl" onClose={handleClose}>
-                                    <VolumenModal volumen={volumen} handleChangeVolumen={handleChangeVolumen} />
+                                    <VolumenModal />
                                 </Container>
                             )
                         }

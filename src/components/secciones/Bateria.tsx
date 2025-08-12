@@ -1,6 +1,7 @@
+import { useStoreBateria } from "@/store/barraTareas/Bateria";
 import { useStoreBateriaRendimiento } from "@/store/barraTareas/BateriaRendimiento";
-import { PiBatteryHighFill } from "react-icons/pi";
 import { TbBatteryCharging, TbBatteryEco } from "react-icons/tb";
+import { getBatteryIcon } from "../Iconos/Bateria";
 
 
 export default function Bateria() {
@@ -8,11 +9,14 @@ export default function Bateria() {
 
     const rendimientoActivado = useStoreBateriaRendimiento((state) => state.rendimientoActivado);
     const handleChangeRendimiento = useStoreBateriaRendimiento((state) => state.cambiarRendimiento);
+    const { Bateria } = useStoreBateria()
     return (
         <div className="flex flex-col gap-6 p-5">
             <header className="flex items-center gap-5">
-                <PiBatteryHighFill className='text-5xl' />
-                <h2 className="text-5xl">87%</h2>
+                {
+                    getBatteryIcon(Bateria, "text-5xl")
+                }
+                <h2 className="text-5xl">{Bateria}%</h2>
             </header>
             <main className="flex flex-col gap-4">
                 <span>Modo de energia: {rendimientoActivado.modo}</span>
