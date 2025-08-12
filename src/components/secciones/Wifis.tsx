@@ -22,8 +22,6 @@ export default function Wifi() {
     const { isPending, isError, handleAction, resetError } = useAction(handleClickConectar)
     const [password, setPassword] = useState(true)
 
-    console.log(wifis)
-
     const handleClickVerPassword = () => {
         setPassword(prev => !prev)
     }
