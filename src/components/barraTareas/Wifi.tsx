@@ -14,7 +14,7 @@ export default function Wifi() {
                 <AnimatePresence>
                     {
                         isOpen && (
-                            <Container className="w-102 h-115 bottom-1/12 overflow-y-auto scrollbar-none" onClose={handleClose}>
+                            <Container className="w-102 h-115 bottom-1/12 overflow-y-auto scrollbar-none rounded-xl" onClose={handleClose}>
                                 <WifiModal />
                             </Container>
                         )

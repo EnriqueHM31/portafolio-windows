@@ -45,7 +45,7 @@ export default function Container({ children, className, onClose, ajustesAnimaci
         <motion.section
             ref={containerRef}
             style={style}
-            className={`fixed bg-black/90 backdrop-blur-3xl rounded-xl ${className} `}
+            className={`fixed bg-black/90 backdrop-blur-3xl  ${className} `}
             initial={ajustesAnimacion.initial}
             animate={ajustesAnimacion.animate}
             exit={ajustesAnimacion.exit}

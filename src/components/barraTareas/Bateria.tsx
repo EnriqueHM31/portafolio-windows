@@ -15,7 +15,7 @@ export default function Bateria() {
                 <AnimatePresence>
                     {
                         isOpen && (
-                            <Container className="w-100 bottom-1/12" onClose={handleClose}>
+                            <Container className="w-100 bottom-1/12 rounded-xl" onClose={handleClose}>
                                 <BateriaModal />
                             </Container>
                         )

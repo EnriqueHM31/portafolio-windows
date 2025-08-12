@@ -16,7 +16,7 @@ export default function Hora() {
                 <AnimatePresence>
                     {
                         isOpen && (
-                            <Container className="w-110 bottom-1/12 left-8/12 -z-10 h-140" onClose={handleClose}>
+                            <Container className="w-110 bottom-1/12 left-7/12 -z-10 h-140 rounded-xl" onClose={handleClose}>
                                 <Calendario hora={hora} fecha={fecha} fechaFinal={fechaFinal} />
                             </Container>
                         )

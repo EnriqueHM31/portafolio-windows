@@ -21,7 +21,7 @@ export default function Notificaciones() {
             >
                 {/* Panel lateral */}{
                     isOpen && (
-                        <Container className="w-110 right-0 top-0 -z-10 h-screen" onClose={handleClose} ajustesAnimacion={{ initial: { opacity: 0, x: 100 }, animate: { opacity: 1, x: 0 }, exit: { opacity: 0, x: 100 }, transition: { duration: 0.5 } }}>
+                        <Container className="w-110 right-0 top-0 -z-10 h-screen rounded-none" onClose={handleClose} ajustesAnimacion={{ initial: { opacity: 0, x: 100 }, animate: { opacity: 1, x: 0 }, exit: { opacity: 0, x: 100 }, transition: { duration: 0.5 } }}>
                             <MenuNotificaciones notificaciones={notificaciones}
                             />
                         </Container>
