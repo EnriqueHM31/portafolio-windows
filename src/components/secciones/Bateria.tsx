@@ -1,12 +1,13 @@
+import { useStoreBateriaRendimiento } from "@/store/barraTareas/BateriaRendimiento";
 import { PiBatteryHighFill } from "react-icons/pi";
 import { TbBatteryCharging, TbBatteryEco } from "react-icons/tb";
-import { type Rendimiento } from "@/types/barraTareas/Bateria";
-interface BateriaModalProps {
-    rendimiento: Rendimiento[]
-    handleChangeRendimiento: (event: React.ChangeEvent<HTMLInputElement>) => void
-}
 
-export default function Bateria({ rendimiento, handleChangeRendimiento }: BateriaModalProps) {
+
+export default function Bateria() {
+
+
+    const rendimientoActivado = useStoreBateriaRendimiento((state) => state.rendimientoActivado);
+    const handleChangeRendimiento = useStoreBateriaRendimiento((state) => state.cambiarRendimiento);
     return (
         <div className="flex flex-col gap-6 p-5">
             <header className="flex items-center gap-5">
@@ -14,13 +15,13 @@ export default function Bateria({ rendimiento, handleChangeRendimiento }: Bateri
                 <h2 className="text-5xl">87%</h2>
             </header>
             <main className="flex flex-col gap-4">
-                <span>Modo de energia: {rendimiento.find((r) => r.active)?.modo}</span>
+                <span>Modo de energia: {rendimientoActivado.modo}</span>
 
                 <div className="relative">
                     <span className="absolute top-0 pointer-events-none left-0 -translate-x-1/2 w-[3px] h-10/12 bg-white rounded-full"></span>
                     <span className="absolute top-0 pointer-events-none left-1/2 -translate-x-1/2 w-[3px] h-10/12 bg-white rounded-full"></span>
                     <span className="absolute top-0 pointer-events-none right-0 -translate-x-1/2 w-[3px] h-10/12 bg-white rounded-full"></span>
-                    <input type="range" min={0} max={100} step={50} value={rendimiento.find((r) => r.active)?.value} className="w-full h-full" onChange={handleChangeRendimiento} name={rendimiento.find((r) => r.active)?.modo} />
+                    <input type="range" min={0} max={100} step={50} value={rendimientoActivado.value} className="w-full h-full" onChange={handleChangeRendimiento} name={rendimientoActivado.modo} />
                 </div>
 
                 <div className="flex items-center justify-between w-ful">
