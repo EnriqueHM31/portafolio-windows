@@ -14,7 +14,8 @@ interface StoreAjustesPredeterminados {
     obtenerAjustesPredeterminados: () => Promise<void>;
     setAjustesPredeterminados: (ajustesPredeterminados: AjustesPredeterminados[]) => void;
     activarAjustePredeterminado: (id: number) => void;
-    modificarAjusteAhorroBateria: () => void;
+    activarAhorroBateria: () => void;
+    desactivarAhorroBateria: () => void;
 }
 
 const loadFromLocalStorage = (key: string) => {
@@ -34,11 +35,7 @@ export const useStoreAjustesPredeterminados = create<StoreAjustesPredeterminados
     obtenerAjustesPredeterminados: async () => {
         const guardados = loadFromLocalStorage("ajustesPredeterminados");
         if (guardados && guardados.length > 0) {
-            const ajusteAhorroBateria = guardados.find((a: AjustesPredeterminados) => a.id === 2);
-            if (ajusteAhorroBateria?.active) {
-                const modificarRendimientoMaximaDuracion = useStoreBateriaRendimiento.getState().modificarRendimientoMaximaDuracion;
-                modificarRendimientoMaximaDuracion();
-            }
+
             set({
                 ajustesPredeterminados: guardados,
                 ajustesPredeterminadosActivados: guardados.filter((a: AjustesPredeterminados) => a.active)
@@ -87,11 +84,12 @@ export const useStoreAjustesPredeterminados = create<StoreAjustesPredeterminados
 
             const ajuste = nuevos.find(a => a.id === 2);
 
+            console.log(ajuste?.active);
             if (ajuste?.active) {
-                const modificarRendimientoMaximaDuracion = useStoreBateriaRendimiento.getState().modificarRendimientoMaximaDuracion;
+                const modificarRendimientoMaximaDuracion = useStoreBateriaRendimiento.getState().forzarMaximaDuracion;
                 modificarRendimientoMaximaDuracion();
             } else if (!ajuste?.active) {
-                const modificarRendimientoPorDefecto = useStoreBateriaRendimiento.getState().modificarRendimientoPorDefecto;
+                const modificarRendimientoPorDefecto = useStoreBateriaRendimiento.getState().restaurarRendimientoAnterior;
                 modificarRendimientoPorDefecto();
             }
 
@@ -105,7 +103,7 @@ export const useStoreAjustesPredeterminados = create<StoreAjustesPredeterminados
     },
 
 
-    modificarAjusteAhorroBateria: () => {
+    activarAhorroBateria: () => {
         set((state) => {
             const nuevos = state.ajustesPredeterminados.map(a => {
                 if (a.id !== 2) return a;
@@ -115,6 +113,24 @@ export const useStoreAjustesPredeterminados = create<StoreAjustesPredeterminados
                 return {
                     ...a,
                     active: nuevoEstado,
+                };
+            });
+            localStorage.setItem("ajustesPredeterminados", JSON.stringify(nuevos));
+            localStorage.setItem("ajustesPredeterminadosActivos", JSON.stringify(nuevos.filter(a => a.active)));
+            return {
+                ajustesPredeterminados: nuevos,
+                ajustesPredeterminadosActivados: nuevos.filter(a => a.active)
+            };
+        });
+    },
+
+    desactivarAhorroBateria: () => {
+        set((state) => {
+            const nuevos = state.ajustesPredeterminados.map(a => {
+                if (a.id !== 2) return a;
+                return {
+                    ...a,
+                    active: false,
                 };
             });
             localStorage.setItem("ajustesPredeterminados", JSON.stringify(nuevos));

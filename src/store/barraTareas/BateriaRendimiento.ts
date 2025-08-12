@@ -1,110 +1,147 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 import { EnumModoRendimiento, type Rendimiento } from "@/types/barraTareas/Bateria";
-import { useStoreAjustesPredeterminados } from './AjustesPredeterminados';
-
+import { BATERIA_LOCALSTORAGE_KEYS } from "@/constants/BarraTareas";
+import { useStoreAjustesPredeterminados } from "./AjustesPredeterminados";
 
 interface StoreBateriaRendimiento {
     rendimientoActivado: Rendimiento;
     rendimientos: Rendimiento[];
+    rendimientoAntiguo: Rendimiento | null;
     obtenerRendimiento: () => Promise<void>;
     cambiarRendimiento: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    modificarRendimientoMaximaDuracion: () => void;
-    modificarRendimientoPorDefecto: () => void;
+    forzarMaximaDuracion: () => void; // activar ahorro
+    restaurarRendimientoAnterior: () => void; // desactivar ahorro
 }
 
-const loadFromLocalStorage = (key: string) => {
+const loadFromLocalStorage = <T,>(key: string): T | null => {
     try {
         const item = localStorage.getItem(key);
-        return item ? JSON.parse(item) : null;
+        return item ? (JSON.parse(item) as T) : null;
     } catch {
         return null;
     }
 };
 
-export const useStoreBateriaRendimiento = create<StoreBateriaRendimiento>((set) => ({
-    rendimientoActivado: loadFromLocalStorage("rendimientoActivado") || [],
-    rendimientos: loadFromLocalStorage("rendimientos") || [],
+export const useStoreBateriaRendimiento = create<StoreBateriaRendimiento>((set, get) => ({
+    rendimientoActivado: loadFromLocalStorage<Rendimiento>(BATERIA_LOCALSTORAGE_KEYS.rendimientoActivado) || {
+        id: 3,
+        modo: EnumModoRendimiento.MaximoRendimiento,
+        active: true,
+        value: 100
+    },
+    rendimientos: loadFromLocalStorage<Rendimiento[]>(BATERIA_LOCALSTORAGE_KEYS.rendimientos) || [],
+    rendimientoAntiguo: loadFromLocalStorage<Rendimiento>(BATERIA_LOCALSTORAGE_KEYS.rendimientoAntiguo) || null,
+
     obtenerRendimiento: async () => {
-        const guardados = loadFromLocalStorage("rendimientos");
-        const RendimientoDefectoGuardado = guardados.find((r: Rendimiento) => r.active);
+        const guardados = loadFromLocalStorage<Rendimiento[]>(BATERIA_LOCALSTORAGE_KEYS.rendimientos);
+
         if (guardados && guardados.length > 0) {
-            set({
-                rendimientos: guardados,
-            });
-            return; // no sobreescribas si ya hay datos en localStorage
-        }
-        if (RendimientoDefectoGuardado === EnumModoRendimiento.MaximaDuracion) {
-            const modificarAjusteAhorroBateria = useStoreAjustesPredeterminados.getState().modificarAjusteAhorroBateria;
-            modificarAjusteAhorroBateria();
+            console.log("guardados", guardados);
+            const rendimientoMaximaDuracion = guardados.find(r => r.modo === EnumModoRendimiento.MaximaDuracion);
+
+            if (rendimientoMaximaDuracion?.active) {
+                const forzarMaximaDuracion = useStoreAjustesPredeterminados.getState().activarAhorroBateria;
+                forzarMaximaDuracion();
+            } else if (!rendimientoMaximaDuracion?.active) {
+                const restaurarRendimientoAnterior = useStoreAjustesPredeterminados.getState().desactivarAhorroBateria;
+                restaurarRendimientoAnterior();
+            }
+            set({ rendimientos: guardados });
+            return;
         }
 
-        // Si no hay datos, sí haz fetch
         const res = await fetch("http://localhost:5173/rendimiento.json");
-        const json = await res.json();
+        const json: Rendimiento[] = await res.json();
+        const activo = json.find(r => r.active) || json[0];
 
-
-        const RendimientoDefecto = json.find((r: Rendimiento) => r.active);
-
-
-        localStorage.setItem("rendimientoActivado", JSON.stringify(RendimientoDefecto));
-        localStorage.setItem("rendimientos", JSON.stringify(json));
+        localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientoActivado, JSON.stringify(activo));
+        localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientos, JSON.stringify(json));
+        localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientoAntiguo, JSON.stringify(activo));
 
         set({
-            rendimientoActivado: RendimientoDefecto,
+            rendimientoActivado: activo,
             rendimientos: json,
+            rendimientoAntiguo: activo,
         });
     },
 
-    cambiarRendimiento: (event: React.ChangeEvent<HTMLInputElement>) => {
+    cambiarRendimiento: (event) => {
         const value = Number(event.target.value);
 
         set((state) => {
-            const rendimientosModificados = state.rendimientos.map((r) => ({
+            const nuevos = state.rendimientos.map(r => ({
                 ...r,
-                active: r.value === value // el seleccionado queda true, los demás false
+                active: r.value === value
             }));
 
-            const RendimientoDefecto = rendimientosModificados.find((r) => r.active);
-
-            localStorage.setItem("rendimientoActivado", JSON.stringify(RendimientoDefecto));
-            localStorage.setItem("rendimientos", JSON.stringify(rendimientosModificados));
-
-
-
-            if (RendimientoDefecto?.modo === EnumModoRendimiento.MaximaDuracion) {
-                const modificarAjusteAhorroBateria = useStoreAjustesPredeterminados.getState().modificarAjusteAhorroBateria;
-                modificarAjusteAhorroBateria();
+            const nuevoActivo = nuevos.find(r => r.active)!;
+            const activoMaximaDuracion = nuevos.find(r => r.modo === EnumModoRendimiento.MaximaDuracion);
+            console.log(nuevoActivo);
+            console.log(activoMaximaDuracion);
+            // Si NO es máxima duración, lo guardamos como antiguo
+            if (nuevoActivo.modo !== EnumModoRendimiento.MaximaDuracion) {
+                localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientoAntiguo, JSON.stringify(nuevoActivo));
             }
 
-            if (RendimientoDefecto?.modo !== EnumModoRendimiento.MaximaDuracion) {
-                const modificarAjusteAhorroBateria = useStoreAjustesPredeterminados.getState().activarAjustePredeterminado;
-                modificarAjusteAhorroBateria(2);
+            if (nuevoActivo.active && nuevoActivo.modo === EnumModoRendimiento.MaximaDuracion) {
+                const activarAjustePredeterminado = useStoreAjustesPredeterminados.getState().activarAhorroBateria;
+                activarAjustePredeterminado();
             }
+
+            localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientoActivado, JSON.stringify(nuevoActivo));
+            localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientos, JSON.stringify(nuevos));
+            localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientoAntiguo, JSON.stringify(nuevoActivo));
+
             return {
-                rendimientoActivado: rendimientosModificados.find((r) => r.active),
-                rendimientos: rendimientosModificados,
+                rendimientoActivado: nuevoActivo,
+                rendimientos: nuevos,
+                rendimientoAntiguo: nuevoActivo.modo !== EnumModoRendimiento.MaximaDuracion
+                    ? nuevoActivo
+                    : state.rendimientoAntiguo,
             };
         });
     },
-    modificarRendimientoMaximaDuracion: () => {
-        set((state) => {
-            const RendimientoDefecto = state.rendimientos.find((r) => r.modo === EnumModoRendimiento.MaximaDuracion);
-            localStorage.setItem("rendimientoActivado", JSON.stringify(RendimientoDefecto));
-            return {
-                rendimientoActivado: RendimientoDefecto,
-                rendimientos: state.rendimientos,
-            };
+
+    forzarMaximaDuracion: () => {
+        const { rendimientos, rendimientoActivado } = get();
+
+        // Guardamos el actual como antiguo antes de cambiar
+        if (rendimientoActivado.modo !== EnumModoRendimiento.MaximaDuracion) {
+            localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientoAntiguo, JSON.stringify(rendimientoActivado));
+        }
+
+        const maxDuracion = rendimientos.find(r => r.modo === EnumModoRendimiento.MaximaDuracion);
+        if (!maxDuracion) return;
+
+        const nuevos = rendimientos.map(r => ({
+            ...r,
+            active: r.modo === EnumModoRendimiento.MaximaDuracion
+        }));
+
+        localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientoActivado, JSON.stringify(maxDuracion));
+        localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientos, JSON.stringify(nuevos));
+
+        set({
+            rendimientoActivado: maxDuracion,
+            rendimientos: nuevos,
         });
     },
-    modificarRendimientoPorDefecto: () => {
-        set((state) => {
-            const RendimientoDefecto = state.rendimientos.find((r) => r.modo === EnumModoRendimiento.MaximoRendimiento);
-            localStorage.setItem("rendimientoActivado", JSON.stringify(RendimientoDefecto));
-            return {
-                rendimientoActivado: RendimientoDefecto,
-                rendimientos: state.rendimientos,
-            };
+
+    restaurarRendimientoAnterior: () => {
+        const { rendimientoAntiguo, rendimientos } = get();
+        if (!rendimientoAntiguo) return;
+
+        const nuevos = rendimientos.map(r => ({
+            ...r,
+            active: r.modo === rendimientoAntiguo.modo
+        }));
+
+        localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientoActivado, JSON.stringify(rendimientoAntiguo));
+        localStorage.setItem(BATERIA_LOCALSTORAGE_KEYS.rendimientos, JSON.stringify(nuevos));
+
+        set({
+            rendimientoActivado: rendimientoAntiguo,
+            rendimientos: nuevos,
         });
     }
-
 }));
