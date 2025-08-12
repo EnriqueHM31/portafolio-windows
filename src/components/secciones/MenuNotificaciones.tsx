@@ -102,7 +102,7 @@ export default function MenuNotificaciones({
                 {ajustesPredeterminados.map((ajuste) => (
                     <div
                         key={ajuste.id}
-                        className={`flex-1 flex flex-col w-fit gap-3 p-3 transition duration-200 ease-in cursor-pointer ${ajuste.active
+                        className={`flex-1 flex flex-col w-fit gap-3 p-3  ease-in cursor-pointer ${ajuste.active
                             ? "bg-blue-700 hover:bg-blue-800"
                             : "bg-primary/15 hover:bg-primary/20"
                             }`}
