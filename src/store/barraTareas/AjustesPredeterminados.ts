@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { useStoreBateriaRendimiento } from "./BateriaRendimiento";
 
 interface AjustesPredeterminados {
     id: number;
@@ -13,7 +14,7 @@ interface StoreAjustesPredeterminados {
     obtenerAjustesPredeterminados: () => Promise<void>;
     setAjustesPredeterminados: (ajustesPredeterminados: AjustesPredeterminados[]) => void;
     activarAjustePredeterminado: (id: number) => void;
-    desactivarAjustePredeterminado: (id: number) => void;
+    modificarAjusteAhorroBateria: () => void;
 }
 
 const loadFromLocalStorage = (key: string) => {
@@ -26,12 +27,18 @@ const loadFromLocalStorage = (key: string) => {
 };
 
 export const useStoreAjustesPredeterminados = create<StoreAjustesPredeterminados>((set) => ({
+
     ajustesPredeterminados: loadFromLocalStorage("ajustesPredeterminados") || [],
     ajustesPredeterminadosActivados: loadFromLocalStorage("ajustesPredeterminadosActivos") || [],
 
     obtenerAjustesPredeterminados: async () => {
         const guardados = loadFromLocalStorage("ajustesPredeterminados");
         if (guardados && guardados.length > 0) {
+            const ajusteAhorroBateria = guardados.find((a: AjustesPredeterminados) => a.id === 2);
+            if (ajusteAhorroBateria?.active) {
+                const modificarRendimientoMaximaDuracion = useStoreBateriaRendimiento.getState().modificarRendimientoMaximaDuracion;
+                modificarRendimientoMaximaDuracion();
+            }
             set({
                 ajustesPredeterminados: guardados,
                 ajustesPredeterminadosActivados: guardados.filter((a: AjustesPredeterminados) => a.active)
@@ -77,6 +84,17 @@ export const useStoreAjustesPredeterminados = create<StoreAjustesPredeterminados
                             : a.titulo
                 };
             });
+
+            const ajuste = nuevos.find(a => a.id === 2);
+
+            if (ajuste?.active) {
+                const modificarRendimientoMaximaDuracion = useStoreBateriaRendimiento.getState().modificarRendimientoMaximaDuracion;
+                modificarRendimientoMaximaDuracion();
+            } else if (!ajuste?.active) {
+                const modificarRendimientoPorDefecto = useStoreBateriaRendimiento.getState().modificarRendimientoPorDefecto;
+                modificarRendimientoPorDefecto();
+            }
+
             localStorage.setItem("ajustesPredeterminados", JSON.stringify(nuevos));
             localStorage.setItem("ajustesPredeterminadosActivos", JSON.stringify(nuevos.filter(a => a.active)));
             return {
@@ -86,20 +104,17 @@ export const useStoreAjustesPredeterminados = create<StoreAjustesPredeterminados
         });
     },
 
-    desactivarAjustePredeterminado: (id) => {
+
+    modificarAjusteAhorroBateria: () => {
         set((state) => {
             const nuevos = state.ajustesPredeterminados.map(a => {
-                if (a.id !== id) return a;
+                if (a.id !== 2) return a;
 
                 const nuevoEstado = false;
 
                 return {
                     ...a,
                     active: nuevoEstado,
-                    titulo:
-                        a.id === 3
-                            ? a.active ? "No conectado" : "Conectado"
-                            : a.titulo
                 };
             });
             localStorage.setItem("ajustesPredeterminados", JSON.stringify(nuevos));
@@ -110,4 +125,6 @@ export const useStoreAjustesPredeterminados = create<StoreAjustesPredeterminados
             };
         });
     }
+
+
 }));
