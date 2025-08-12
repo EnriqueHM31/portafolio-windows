@@ -1,7 +1,7 @@
+import { useStoreAplicacionesPredeterminadas } from "@/store/aplicaciones/AplicacionesPredeterminadas";
 import { useStoreAjustesPredeterminados } from "@/store/barraTareas/AjustesPredeterminados";
-import { FaWindows } from "react-icons/fa";
+import { GrWindows } from "react-icons/gr";
 import { VscSearch } from "react-icons/vsc";
-import { APPS_PREDETERMINADAS } from "../constants/Aplicaciones";
 import AppTareas from "./aplicaciones/AppTareas";
 import AjustesPredeterminados from "./barraTareas/AjustesPredeterminados";
 import Bateria from "./barraTareas/Bateria";
@@ -14,15 +14,15 @@ import Tooltip from "./general/ToolTip";
 export default function BarraTareas() {
 
     const ajustesPredeterminadosActivados = useStoreAjustesPredeterminados(state => state.ajustesPredeterminadosActivados);
+    const { aplicacionesPredeterminadas } = useStoreAplicacionesPredeterminadas();
+
 
     return (
-        <section className=" w-full z-50 bg-black text-white flex items-center max-w-full mx-auto ">
+        <section className=" w-full z-50 bg-black text-white flex items-center max-w-full mx-auto ps-1 ">
             {/* Botón de inicio */}
             <div className='flex items-center h-full group '>
                 <Tooltip text="Inicio" position="top">
-                    <button className=" size-12 flex items-center justify-center">
-                        <FaWindows className='text-xl' />
-                    </button>
+                    <GrWindows className='size-11 p-3' />
                 </Tooltip>
                 <label
                     htmlFor="buscador-windows"
@@ -41,7 +41,7 @@ export default function BarraTareas() {
             {/* Espacio en medio */}
             <div className="flex-1 flex items-center gap-1 px-1">
                 {
-                    APPS_PREDETERMINADAS.map((app) => (
+                    aplicacionesPredeterminadas.map((app) => (
                         <Tooltip text={app.label} key={app.id} position="top">
                             <AppTareas key={app.id} icono={app.icono} active={app.active} />
                         </Tooltip>
