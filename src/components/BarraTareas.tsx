@@ -1,23 +1,17 @@
-import { type Rendimiento } from "@/types/barraTareas/Bateria";
+import { useStoreAjustesPredeterminados } from "@/store/barraTareas/AjustesPredeterminados";
 import { FaWindows } from "react-icons/fa";
 import { VscSearch } from "react-icons/vsc";
 import { APPS_PREDETERMINADAS } from "../constants/Aplicaciones";
 import AppTareas from "./aplicaciones/AppTareas";
+import AjustesPredeterminados from "./barraTareas/AjustesPredterminados";
 import Bateria from "./barraTareas/Bateria";
 import Hora from "./barraTareas/Hora";
 import Notificaciones from "./barraTareas/Notificaciones";
 import Volumen from "./barraTareas/Volumen";
 import Wifi from "./barraTareas/Wifi";
 import Tooltip from "./general/ToolTip";
-import AjustesPredeterminados from "./barraTareas/AjustesPredterminados";
-import { useStoreAjustesPredeterminados } from "@/store/barraTareas/AjustesPredeterminados";
 
-interface BarraTareasProps {
-    rendimiento: Rendimiento[]
-    handleChangeRendimiento: (event: React.ChangeEvent<HTMLInputElement>) => void
-}
-
-export default function BarraTareas({ rendimiento, handleChangeRendimiento }: BarraTareasProps) {
+export default function BarraTareas() {
 
     const ajustesPredeterminadosActivados = useStoreAjustesPredeterminados(state => state.ajustesPredeterminadosActivados);
 
@@ -65,7 +59,7 @@ export default function BarraTareas({ rendimiento, handleChangeRendimiento }: Ba
 
                 <Wifi />
 
-                <Bateria rendimiento={rendimiento} handleChangeRendimiento={handleChangeRendimiento} />
+                <Bateria />
 
                 <Volumen />
 
