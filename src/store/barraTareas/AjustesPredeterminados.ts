@@ -1,39 +1,91 @@
-import { create } from "zustand"
+import { create } from "zustand";
 
 interface AjustesPredeterminados {
-    id: number,
-    icono: string,
-    titulo: string,
-    active: boolean
+    id: number;
+    icono: string;
+    titulo: string;
+    active: boolean;
 }
 
 interface StoreAjustesPredeterminados {
-    ajustesPredeterminados: AjustesPredeterminados[],
-    obtenerAjustesPredeterminados: () => Promise<void>,
-    setAjustesPredeterminados: (ajustesPredeterminados: AjustesPredeterminados[]) => void
-    activarAjustePredeterminado: (id: number) => void
+    ajustesPredeterminados: AjustesPredeterminados[];
+    ajustesPredeterminadosActivados: AjustesPredeterminados[];
+    obtenerAjustesPredeterminados: () => Promise<void>;
+    setAjustesPredeterminados: (ajustesPredeterminados: AjustesPredeterminados[]) => void;
+    activarAjustePredeterminado: (id: number) => void;
+    desactivarAjustePredeterminado: (id: number) => void;
 }
 
-export const useStoreAjustesPredeterminados = create<StoreAjustesPredeterminados>((set, get) => ({
-    ajustesPredeterminados: [] as AjustesPredeterminados[],
-    obtenerAjustesPredeterminados: async () => {
-        const ajustesPredeterminados = await fetch("http://localhost:5173/ajustesPredeterminados.json")
-        const jsonAjustesPredeterminados = await ajustesPredeterminados.json()
-
-        set({ ajustesPredeterminados: jsonAjustesPredeterminados })
-    },
-    setAjustesPredeterminados: (ajustesPredeterminados: AjustesPredeterminados[]) => set({ ajustesPredeterminados }),
-    activarAjustePredeterminado: (id: number) => {
-        set({
-            ajustesPredeterminados: get().ajustesPredeterminados.map(ajuste => {
-                if (ajuste.id === id) {
-                    return {
-                        ...ajuste,
-                        active: !ajuste.active
-                    }
-                }
-                return ajuste;
-            })
-        })
+const loadFromLocalStorage = (key: string) => {
+    try {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : null;
+    } catch {
+        return null;
     }
-}))
+};
+
+export const useStoreAjustesPredeterminados = create<StoreAjustesPredeterminados>((set) => ({
+    ajustesPredeterminados: loadFromLocalStorage("ajustesPredeterminados") || [],
+    ajustesPredeterminadosActivados: loadFromLocalStorage("ajustesPredeterminadosActivos") || [],
+
+    obtenerAjustesPredeterminados: async () => {
+        const guardados = loadFromLocalStorage("ajustesPredeterminados");
+        if (guardados && guardados.length > 0) {
+            set({
+                ajustesPredeterminados: guardados,
+                ajustesPredeterminadosActivados: guardados.filter((a: AjustesPredeterminados) => a.active)
+            });
+            return; // no sobreescribas si ya hay datos en localStorage
+        }
+
+        // Si no hay datos, sí haz fetch
+        const res = await fetch("http://localhost:5173/ajustesPredeterminados.json");
+        const json = await res.json();
+
+        localStorage.setItem("ajustesPredeterminados", JSON.stringify(json));
+        localStorage.setItem("ajustesPredeterminadosActivos", JSON.stringify(json.filter((a: AjustesPredeterminados) => a.active)));
+
+        set({
+            ajustesPredeterminados: json,
+            ajustesPredeterminadosActivados: json.filter((a: AjustesPredeterminados) => a.active)
+        });
+    },
+
+    setAjustesPredeterminados: (ajustesPredeterminados) => {
+        localStorage.setItem("ajustesPredeterminados", JSON.stringify(ajustesPredeterminados));
+        localStorage.setItem("ajustesPredeterminadosActivos", JSON.stringify(ajustesPredeterminados.filter(a => a.active)));
+        set({
+            ajustesPredeterminados,
+            ajustesPredeterminadosActivados: ajustesPredeterminados.filter(a => a.active)
+        });
+    },
+
+    activarAjustePredeterminado: (id) => {
+        set((state) => {
+            const nuevos = state.ajustesPredeterminados.map(a =>
+                a.id === id ? { ...a, active: !a.active } : a
+            );
+            localStorage.setItem("ajustesPredeterminados", JSON.stringify(nuevos));
+            localStorage.setItem("ajustesPredeterminadosActivos", JSON.stringify(nuevos.filter(a => a.active)));
+            return {
+                ajustesPredeterminados: nuevos,
+                ajustesPredeterminadosActivados: nuevos.filter(a => a.active)
+            };
+        });
+    },
+
+    desactivarAjustePredeterminado: (id) => {
+        set((state) => {
+            const nuevos = state.ajustesPredeterminados.map(a =>
+                a.id === id ? { ...a, active: false } : a
+            );
+            localStorage.setItem("ajustesPredeterminados", JSON.stringify(nuevos));
+            localStorage.setItem("ajustesPredeterminadosActivos", JSON.stringify(nuevos.filter(a => a.active)));
+            return {
+                ajustesPredeterminados: nuevos,
+                ajustesPredeterminadosActivados: nuevos.filter(a => a.active)
+            };
+        });
+    }
+}));
