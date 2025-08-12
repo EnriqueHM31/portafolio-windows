@@ -13,6 +13,7 @@ interface ContainerProps {
     className?: string;
     onClose: () => void; // Nueva prop para cerrar
     ajustesAnimacion?: AjustesAnimacion
+    style?: Record<string, string>
 }
 
 const predeterminados = {
@@ -21,7 +22,7 @@ const predeterminados = {
     exit: { opacity: 0, y: 80 },
     transition: { duration: 0.5 },
 }
-export default function Container({ children, className, onClose, ajustesAnimacion = predeterminados }: ContainerProps) {
+export default function Container({ children, className, onClose, ajustesAnimacion = predeterminados, style }: ContainerProps) {
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -29,7 +30,6 @@ export default function Container({ children, className, onClose, ajustesAnimaci
             if (!containerRef.current) return;
             const path = event.composedPath();
             if (!path.includes(containerRef.current)) {
-                console.log("click fuera")
                 onClose();
             }
 
@@ -44,6 +44,7 @@ export default function Container({ children, className, onClose, ajustesAnimaci
 
         <motion.section
             ref={containerRef}
+            style={style}
             className={`fixed bg-black/90 backdrop-blur-3xl rounded-xl ${className} `}
             initial={ajustesAnimacion.initial}
             animate={ajustesAnimacion.animate}
