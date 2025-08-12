@@ -1,41 +1,30 @@
 
 import FONDO from '@/assets/img/fondos/fondo.webp'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import BarraTareas from './components/BarraTareas'
-import { type Rendimiento, ModoRendimiento } from './types/barraTareas/Bateria'
-import { useStoreNotificaciones } from './store/barraTareas/Notificiaciones'
+import { EnumModoRendimiento } from '@/types/barraTareas/Bateria'
 import { useStoreAjustesPredeterminados } from './store/barraTareas/AjustesPredeterminados'
+import { useStoreBateriaRendimiento } from './store/barraTareas/BateriaRendimiento'
+import { useStoreNotificaciones } from './store/barraTareas/Notificiaciones'
 
-const RENDIMIENTO_INITIAL = [
-  { modo: ModoRendimiento.MaximaDuracion, active: false, value: 0 },
-  { modo: ModoRendimiento.Equilibrado, active: false, value: 50 },
-  { modo: ModoRendimiento.MaximoRendimiento, active: true, value: 100 },
-] as Rendimiento[]
 
 function App() {
 
-  const [rendimiento, setRendimiento] = useState(RENDIMIENTO_INITIAL)
   const obtenerNotificaciones = useStoreNotificaciones((state) => state.obtenerNotificaciones)
   const obtenerAjustesPredeterminados = useStoreAjustesPredeterminados((state) => state.obtenerAjustesPredeterminados)
   const AjustesPredeterminadosActivos = useStoreAjustesPredeterminados(state => state.ajustesPredeterminadosActivados);
 
-  const handleChangeRendimiento = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(event.target.value);
+  const obtenerRendimientosBateria = useStoreBateriaRendimiento((state) => state.obtenerRendimiento)
+  const rendimientoActivado = useStoreBateriaRendimiento((state) => state.rendimientoActivado)
 
-    setRendimiento(rendimiento.map((r) => ({
-      ...r,
-      active: r.value === value // el seleccionado queda true, los demás false
-    })));
-  };
 
   const fondoRendimiento = (() => {
-    const activo = rendimiento.find(r => r.active);
 
-    if (!activo) return "bg-transparent";
+    if (!rendimientoActivado) return "bg-transparent";
 
-    if (activo.modo === ModoRendimiento.MaximaDuracion) return "bg-black/30";
-    if (activo.modo === ModoRendimiento.Equilibrado) return "bg-black/10";
-    if (activo.modo === ModoRendimiento.MaximoRendimiento) return "bg-transparent";
+    if (rendimientoActivado.modo === EnumModoRendimiento.MaximaDuracion) return "bg-black/30";
+    if (rendimientoActivado.modo === EnumModoRendimiento.Equilibrado) return "bg-black/10";
+    if (rendimientoActivado.modo === EnumModoRendimiento.MaximoRendimiento) return "bg-transparent";
 
     return "bg-transparent";
   })();
@@ -44,9 +33,9 @@ function App() {
   useEffect(() => {
     obtenerNotificaciones();
     obtenerAjustesPredeterminados();
+    obtenerRendimientosBateria();
   }, [])
 
-  console.log(AjustesPredeterminadosActivos)
   return (
     <>
       {
@@ -69,7 +58,7 @@ function App() {
         </div>
 
         {/* Barra de tareas */}
-        <BarraTareas rendimiento={rendimiento} handleChangeRendimiento={handleChangeRendimiento} />
+        <BarraTareas />
       </section>
 
     </>
