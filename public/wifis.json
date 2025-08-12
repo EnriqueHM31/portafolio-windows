@@ -1,0 +1,68 @@
+[
+    {
+        "id": 1,
+        "name": "INFINITUM_LEHM",
+        "conectado": true,
+        "abierto": false,
+        "automatico": true,
+        "bloqueado": false,
+        "password": "1111",
+        "passwordUsuario": "1111",
+        "openPassword": false
+    },
+    {
+        "id": 2,
+        "name": "INFINITUM_1234",
+        "conectado": false,
+        "abierto": false,
+        "automatico": false,
+        "bloqueado": true,
+        "password": "2222",
+        "passwordUsuario": "",
+        "openPassword": false
+    },
+    {
+        "id": 3,
+        "name": "INFINITUM_4567",
+        "conectado": false,
+        "abierto": false,
+        "automatico": false,
+        "bloqueado": true,
+        "password": "3333",
+        "passwordUsuario": "",
+        "openPassword": false
+    },
+    {
+        "id": 4,
+        "name": "INFINITUM_8910",
+        "conectado": false,
+        "abierto": false,
+        "automatico": false,
+        "bloqueado": true,
+        "password": "4444",
+        "passwordUsuario": "",
+        "openPassword": false
+    },
+    {
+        "id": 5,
+        "name": "INFINITUM_7890",
+        "conectado": false,
+        "abierto": false,
+        "automatico": false,
+        "bloqueado": true,
+        "password": "5555",
+        "passwordUsuario": "",
+        "openPassword": false
+    },
+    {
+        "id": 6,
+        "name": "INFINITUM_FRONT",
+        "conectado": false,
+        "abierto": false,
+        "automatico": false,
+        "bloqueado": true,
+        "password": "6666",
+        "passwordUsuario": "",
+        "openPassword": false
+    }
+]
