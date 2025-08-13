@@ -2,12 +2,13 @@
 import FONDO from '@/assets/img/fondos/fondo.webp'
 import { useEffect } from 'react'
 import BarraTareas from './components/BarraTareas'
+import Escritorio from './components/secciones/aplicaciones/Escritorio'
+import { useStoreAplicacionesPredeterminadas } from './store/aplicaciones/AplicacionesPredeterminadas'
 import { useStoreAjustesPredeterminados } from './store/barraTareas/AjustesPredeterminados'
 import { useStoreBateriaRendimiento } from './store/barraTareas/BateriaRendimiento'
 import { useStoreNotificaciones } from './store/barraTareas/Notificiaciones'
-import { fondoRendimiento } from './utils/barraTareas/Bateria'
-import { useStoreAplicacionesPredeterminadas } from './store/aplicaciones/AplicacionesPredeterminadas'
 import { useStoreWifis } from './store/barraTareas/Wifis'
+import { fondoRendimiento } from './utils/barraTareas/Bateria'
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
     obtenerWifis();
   }, [])
 
+
   return (
     <>
       {
@@ -41,14 +43,13 @@ function App() {
       <section className="w-full h-screen  grid grid-rows-[1fr_auto] overflow-hidden">
         {/* Fondo */}
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center pointer-events-none"
           style={{ backgroundImage: `url(${FONDO})` }}
         />
 
         {/* Contenido del "escritorio" */}
-        <section className="relative z-10 p-4 ">
-          {/* Aquí puedes poner iconos, widgets, etc. */}
-        </section>
+
+        <Escritorio />
 
         {/* Barra de tareas */}
         <BarraTareas />
