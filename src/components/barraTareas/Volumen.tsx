@@ -12,22 +12,22 @@ export default function Volumen() {
 
     const { volumen } = useStoreVolumen()
     return (
-        <>
+        <div className="relative">
 
             <Tooltip text={`Altavoces: ${volumen}%`} position="top">
                 <span className='hover:bg-white/20 h-full flex items-center justify-center px-1 relative cursor-pointer' onClick={() => handleOpen("Volumen-Tareas")}>
-                    <AnimatePresence>
-                        {
-                            isOpen && (
-                                <Container className="w-70  bottom-1/12 rounded-xl" onClose={handleClose}>
-                                    <VolumenModal />
-                                </Container>
-                            )
-                        }
-                    </AnimatePresence>
                     <IoVolumeHighSharp className=' text-xl ' />
                 </span>
             </Tooltip>
-        </>
+            <AnimatePresence>
+                {
+                    isOpen && (
+                        <Container className="w-70  bottom-1/12 rounded-xl right-10" onClose={handleClose}>
+                            <VolumenModal />
+                        </Container>
+                    )
+                }
+            </AnimatePresence>
+        </div>
     )
 }

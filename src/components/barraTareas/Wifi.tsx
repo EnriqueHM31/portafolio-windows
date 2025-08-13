@@ -13,9 +13,11 @@ export default function Wifi() {
     const { wifis } = useStoreWifis();
     const HayUnWifiConectado = wifis.find(w => w.conectado);
     const { isOpen, handleOpen, handleClose } = useOpen()
+
+    const textoTooltip = HayUnWifiConectado ? `${HayUnWifiConectado.name}<br/>Acceso a Internet` : "No hay Wifi conectado";
     return (
         <div className="relative">
-            <Tooltip text="INFINITUM_LEHM<br/>Acceso a Internet" position="top">
+            <Tooltip text={textoTooltip} position="top">
                 <span className='hover:bg-white/20 h-full flex items-center justify-center px-1 cursor-pointer' onClick={() => handleOpen("Wifi-Tareas")}>
                     {
                         HayUnWifiConectado ? (

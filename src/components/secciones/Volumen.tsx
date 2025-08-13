@@ -13,7 +13,7 @@ export default function Volumen() {
             <div className="flex justify-between  gap-5 items-center">
                 <IoVolumeHighSharp className='text-4xl' />
                 <input onChange={modificarVolumen} type="range" min="0" max="100" value={volumen} className="w-full h-full" />
-                <span className="text-2xl">{volumen}</span>
+                <span className="text-2xl min-w-10">{volumen}</span>
             </div>
         </div>
     )

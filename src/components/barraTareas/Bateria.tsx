@@ -12,21 +12,24 @@ export default function Bateria() {
     const { isOpen, handleOpen, handleClose } = useOpen()
     const { Bateria } = useStoreBateria()
     return (
-        <Tooltip text={`${Bateria} % Disponible`} position="top">
-            <span className='hover:bg-white/20 h-full flex items-center justify-center px-1 cursor-pointer' onClick={() => handleOpen("Bateria-Tareas")}>
-                <AnimatePresence>
+        <div className="relative">
+            <Tooltip text={`${Bateria} % Disponible`} position="top">
+                <span className='hover:bg-white/20 h-full flex items-center justify-center px-1 cursor-pointer' onClick={() => handleOpen("Bateria-Tareas")}>
                     {
-                        isOpen && (
-                            <Container className="w-100 bottom-1/12 rounded-xl" onClose={handleClose}>
-                                <BateriaModal />
-                            </Container>
-                        )
+                        getBatteryIcon(Bateria, "text-xl")
                     }
-                </AnimatePresence>
+                </span>
+            </Tooltip>
+            <AnimatePresence>
                 {
-                    getBatteryIcon(Bateria, "text-xl")
+                    isOpen && (
+                        <Container className="w-100 bottom-1/12 right-10 rounded-xl" onClose={handleClose}>
+                            <BateriaModal />
+                        </Container>
+                    )
                 }
-            </span>
-        </Tooltip>
+            </AnimatePresence>
+
+        </div>
     )
 }
