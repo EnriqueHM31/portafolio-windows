@@ -3,18 +3,32 @@
         "id": 1,
         "label": "Chrome",
         "icono": "CHROME",
-        "active": true
+        "escritorio": true,
+        "barraTareas": true,
+        "abierto": false
     },
     {
         "id": 2,
         "label": "Explorador",
         "icono": "EXPLORADORARCHIVOS",
-        "active": false
+        "escritorio": false,
+        "barraTareas": true,
+        "abierto": false
     },
     {
         "id": 3,
         "label": "Configuración",
         "icono": "CONFIGURACION",
-        "active": false
+        "escritorio": true,
+        "barraTareas": true,
+        "abierto": false
+    },
+    {
+        "id": 4,
+        "label": "Bloc de notas",
+        "icono": "BLOCKNOTAS",
+        "escritorio": true,
+        "barraTareas": false,
+        "abierto": false
     }
 ]
