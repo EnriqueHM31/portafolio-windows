@@ -1,12 +1,18 @@
 import AplicacionIcono from "@/components/aplicaciones/AplicacionIcono";
-import { GooglePage } from "@/components/pages";
 import { useStoreAplicacionesPredeterminadas } from "@/store/aplicaciones/AplicacionesPredeterminadas";
 import { useState } from "react";
 
+interface Aplicacion {
+    id: number;
+    label: string;
+    icono: string;
+    escritorio: boolean;
+    barraTareas: boolean;
+}
 
 export default function Escritorio() {
 
-    const { aplicacionesPredeterminadas, onRemove, onRename } = useStoreAplicacionesPredeterminadas();
+    const { aplicacionesEscritorio, onRemove, onRename } = useStoreAplicacionesPredeterminadas();
     const [submenuAbiertoId, setSubmenuAbiertoId] = useState<number | null>(null);
 
     // Cierra submenu si clickeas fuera
@@ -20,13 +26,13 @@ export default function Escritorio() {
             onClick={handleClickFuera}
             style={{ minHeight: "90vh" }}
         >
-            <GooglePage />
-            {aplicacionesPredeterminadas.map(({ id, icono, label }) => (
+            {
+
+            }
+            {aplicacionesEscritorio.map((aplicacion: Aplicacion) => (
                 <AplicacionIcono
-                    key={id}
-                    id={id}
-                    icono={icono}
-                    name={label}
+                    key={aplicacion.id}
+                    aplicacion={aplicacion}
                     submenuAbiertoId={submenuAbiertoId}
                     setSubmenuAbiertoId={setSubmenuAbiertoId}
                     onRemove={onRemove}
