@@ -1,10 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import AplicacionesPredeterminadasIcon from "../Iconos/AplicacionesPredeterminadas";
+import { useStoreAplicacionesPredeterminadas } from "@/store/aplicaciones/AplicacionesPredeterminadas";
+
+interface Aplicacion {
+    id: number;
+    label: string;
+    icono: string;
+    escritorio: boolean;
+    barraTareas: boolean;
+}
 
 interface AplicacionIconoProps {
-    id: number;
-    icono: string;
-    name: string;
+    aplicacion: Aplicacion;
     submenuAbiertoId: number | null;
     setSubmenuAbiertoId: (id: number | null) => void;
     onRemove: (id: number) => void;
@@ -12,32 +19,32 @@ interface AplicacionIconoProps {
 }
 
 export default function AplicacionIcono({
-    id,
-    icono,
-    name,
+    aplicacion,
     submenuAbiertoId,
     setSubmenuAbiertoId,
     onRemove,
     onRename,
 }: AplicacionIconoProps) {
     const [editandoNombre, setEditandoNombre] = useState(false);
-    const [nuevoNombre, setNuevoNombre] = useState(name);
+    const [nuevoNombre, setNuevoNombre] = useState(aplicacion.label);
     const iconoRef = useRef<HTMLDivElement>(null);
     const [submenuPos, setSubmenuPos] = useState<{ left: number; top: number }>({
         left: 0,
         top: 0,
     });
 
-    const esSubmenuAbierto = submenuAbiertoId === id;
+    const { toggleBarraTareas } = useStoreAplicacionesPredeterminadas();
+
+    const esSubmenuAbierto = submenuAbiertoId === aplicacion.id;
 
     const toggleSubmenu = (e: React.MouseEvent) => {
         e.preventDefault(); // para evitar menú context nativo si usas click derecho
         if (esSubmenuAbierto) {
             setSubmenuAbiertoId(null);
             setEditandoNombre(false);
-            setNuevoNombre(name);
+            setNuevoNombre(aplicacion.label);
         } else {
-            setSubmenuAbiertoId(id);
+            setSubmenuAbiertoId(aplicacion.id);
         }
     };
 
@@ -50,13 +57,10 @@ export default function AplicacionIcono({
             let left = 0;
             let top = rect.height + 5; // 5px abajo del icono
 
-            // Ajustar horizontalmente para no salir del viewport
             if (espacioDerecha < 200) {
-                // ancho submenu ~ 200px
                 left = rect.width - 200; // lo alinea a la derecha del icono
             }
 
-            // Ajustar verticalmente para no salir del viewport
             if (espacioAbajo < 100) {
                 top = -110; // muestra arriba del icono (alto submenu aprox 100px + algo)
             }
@@ -72,13 +76,12 @@ export default function AplicacionIcono({
     const handleCancelar = () => {
         setSubmenuAbiertoId(null);
         setEditandoNombre(false);
-        setNuevoNombre(name);
+        setNuevoNombre(aplicacion.label);
     };
 
     const handleGuardarNombre = () => {
         setEditandoNombre(false);
-        console.log(nuevoNombre.trim());
-        onRename(id, nuevoNombre.trim());
+        onRename(aplicacion.id, nuevoNombre.trim());
     };
 
     return (
@@ -92,7 +95,7 @@ export default function AplicacionIcono({
             }}
         >
             <div className="p-2 rounded">
-                <AplicacionesPredeterminadasIcon nombreIcono={icono} />
+                <AplicacionesPredeterminadasIcon nombreIcono={aplicacion.icono} />
             </div>
 
             <div className="mt-1 w-full text-center">
@@ -114,7 +117,7 @@ export default function AplicacionIcono({
                         className="border bg-primary text-secondary border-gray-400  px-1 text-center text-sm w-full"
                     />
                 ) : (
-                    <span>{name}</span>
+                    <span>{aplicacion.label}</span>
                 )}
             </div>
 
@@ -124,6 +127,14 @@ export default function AplicacionIcono({
                     style={{ left: submenuPos.left, top: submenuPos.top }}
                     onClick={(e) => e.stopPropagation()} // evitar cierre si clic en submenu
                 >
+                    <button
+                        className="block w-full text-left py-1 hover:bg-primary/15 text-xs px-4 "
+                        onClick={() => toggleBarraTareas(aplicacion.id)}
+                    >
+                        {
+                            aplicacion.barraTareas ? "Quitar de la barra tareas" : "Anclar a la barra tareas"
+                        }
+                    </button>
                     <button
                         className="block w-full text-left py-1 hover:bg-primary/15 text-xs px-4"
                         onClick={() => {
@@ -143,12 +154,13 @@ export default function AplicacionIcono({
                     <button
                         className="block w-full text-left py-1 hover:bg-primary/15 text-xs px-4 "
                         onClick={() => {
-                            if (onRemove) onRemove(id);
+                            if (onRemove) onRemove(aplicacion.id);
                             setSubmenuAbiertoId(null);
                         }}
                     >
                         Quitar de escritorio
                     </button>
+                    <hr className="border-primary/30" />
                 </div>
             )}
         </div>
