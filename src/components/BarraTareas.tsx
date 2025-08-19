@@ -10,11 +10,12 @@ import Notificaciones from "./barraTareas/Notificaciones";
 import Volumen from "./barraTareas/Volumen";
 import Wifi from "./barraTareas/Wifi";
 import Tooltip from "./general/ToolTip";
+import { AnimatePresence } from "framer-motion";
 
 export default function BarraTareas() {
 
     const ajustesPredeterminadosActivados = useStoreAjustesPredeterminados(state => state.ajustesPredeterminadosActivados);
-    const { aplicacionesPredeterminadas } = useStoreAplicacionesPredeterminadas();
+    const { aplicacionesBarraTareas } = useStoreAplicacionesPredeterminadas();
 
 
 
@@ -41,13 +42,15 @@ export default function BarraTareas() {
 
             {/* Espacio en medio */}
             <div className="flex-1 flex items-center gap-1 px-1">
-                {
-                    aplicacionesPredeterminadas.map((app) => (
-                        <Tooltip text={app.label} key={app.id} position="top">
-                            <AppTareas key={app.id} icono={app.icono} active={app.active} />
-                        </Tooltip>
-                    ))
-                }
+                <AnimatePresence mode="sync">
+                    {aplicacionesBarraTareas.map((app) =>
+                        app.barraTareas ? (
+                            <Tooltip text={app.label} key={app.id} position="top">
+                                <AppTareas barra={app.barraTareas} icono={app.icono} active={app.abierto} />
+                            </Tooltip>
+                        ) : null
+                    )}
+                </AnimatePresence>
             </div>
 
             {/* Hora */}
