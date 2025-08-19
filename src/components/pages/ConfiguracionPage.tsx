@@ -7,10 +7,7 @@ import {
     IoDesktop,
     IoShield,
     IoColorPalette,
-    IoNotifications,
     IoWifi,
-    IoBattery,
-    IoVolumeHigh
 } from 'react-icons/io5';
 
 const ConfiguracionPage: React.FC = () => {
@@ -180,8 +177,8 @@ const ConfiguracionPage: React.FC = () => {
                                         key={item.id}
                                         onClick={() => setActiveSection(item.id)}
                                         className={`w-full flex items-center space-x-3 px-3 py-2 rounded text-left transition-colors ${activeSection === item.id
-                                                ? 'bg-blue-500 text-white'
-                                                : 'text-gray-600 hover:bg-gray-100'
+                                            ? 'bg-blue-500 text-white'
+                                            : 'text-gray-600 hover:bg-gray-100'
                                             }`}
                                     >
                                         <Icon className="w-5 h-5" />
