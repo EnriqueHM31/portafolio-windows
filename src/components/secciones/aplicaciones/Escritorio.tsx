@@ -1,6 +1,7 @@
-import { useState } from "react";
 import AplicacionIcono from "@/components/aplicaciones/AplicacionIcono";
+import { GooglePage } from "@/components/pages";
 import { useStoreAplicacionesPredeterminadas } from "@/store/aplicaciones/AplicacionesPredeterminadas";
+import { useState } from "react";
 
 
 export default function Escritorio() {
@@ -19,6 +20,7 @@ export default function Escritorio() {
             onClick={handleClickFuera}
             style={{ minHeight: "90vh" }}
         >
+            <GooglePage />
             {aplicacionesPredeterminadas.map(({ id, icono, label }) => (
                 <AplicacionIcono
                     key={id}
