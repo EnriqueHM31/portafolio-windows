@@ -36,7 +36,6 @@ export default function IconosOcultos() {
 
     // Desactivar ajuste
     const handleDesactivar = (id: number) => {
-        console.log("Desactivando", id);
         activarAjustePredeterminado(id);
         handleClose();
     };
