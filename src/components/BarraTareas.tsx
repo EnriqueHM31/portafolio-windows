@@ -44,11 +44,9 @@ export default function BarraTareas() {
             <div className="flex-1 flex items-center gap-1 px-1">
                 <AnimatePresence mode="sync">
                     {aplicacionesBarraTareas.map((app) =>
-                        app.barraTareas ? (
-                            <Tooltip text={app.label} key={app.id} position="top">
-                                <AppTareas barra={app.barraTareas} icono={app.icono} active={app.abierto} />
-                            </Tooltip>
-                        ) : null
+                        <Tooltip text={app.label} key={app.id} position="top">
+                            <AppTareas id={app.id} barra={app.barraTareas} icono={app.icono} active={app.abierto} />
+                        </Tooltip>
                     )}
                 </AnimatePresence>
             </div>
